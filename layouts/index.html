@@ -1,0 +1,28 @@
+{{ define "main" }}
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero-kicker">{{ site.Params.funderShort }} · {{ site.Params.program }}</p>
+      <h1 class="hero-title">{{ site.Title }}</h1>
+      <p class="hero-tagline">{{ site.Params.tagline }}</p>
+      {{ with .Content }}<div class="hero-intro prose">{{ . }}</div>{{ end }}
+      <p class="hero-actions">
+        <a class="btn" href="#speakers">See the colloquia</a>
+        <a class="btn btn-ghost" href="{{ "/about/" | relURL }}">How the series works</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="lectures" id="speakers">
+    <div class="wrap section-head">
+      <h2 class="section-title">Speakers &amp; Colloquia</h2>
+      <p class="section-sub">Each Cottrell Scholar gives a pair of linked colloquia — one hosted by their paired
+      scholar, and a co-equal second talk at a neighboring institution.</p>
+    </div>
+    {{ $pairs := where site.RegularPages "Section" "lectures" }}
+    {{ range $pairs.ByDate.Reverse }}
+      {{ partial "pairing-card.html" . }}
+    {{ else }}
+      <p class="wrap empty">No colloquia announced yet — check back soon.</p>
+    {{ end }}
+  </section>
+{{ end }}

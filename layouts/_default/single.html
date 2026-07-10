@@ -1,0 +1,24 @@
+{{ define "main" }}
+  {{ if .Params.speaker }}
+    {{/* A pairing page: the co-equal boxes, plus any speaker bio from the body. */}}
+    <article class="single">
+      {{ partial "pairing-card.html" . }}
+      {{ if .Content }}
+        <div class="wrap prose bio">
+          {{ .Content }}
+        </div>
+      {{ end }}
+      <div class="wrap back">
+        <a href="{{ "/lectures/" | relURL }}"><span aria-hidden="true">←</span> All speakers</a>
+      </div>
+    </article>
+  {{ else }}
+    {{/* A normal content page (e.g. About). */}}
+    <article class="page">
+      <div class="wrap">
+        <h1 class="page-title">{{ .Title }}</h1>
+        <div class="prose">{{ .Content }}</div>
+      </div>
+    </article>
+  {{ end }}
+{{ end }}

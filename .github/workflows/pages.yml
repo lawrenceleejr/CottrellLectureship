@@ -1,0 +1,61 @@
+# Build the Hugo site on every push/PR; deploy to GitHub Pages only from main.
+# Repo setting (fallback): Settings -> Pages -> Source: GitHub Actions.
+# `enablement: true` below auto-enables Pages on the first run so branch builds
+# are green immediately; the manual setting is only needed if that lacks permission.
+name: pages
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  HUGO_VERSION: 0.140.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write          # allow configure-pages `enablement: true` to enable Pages
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive   # themes are often submodules
+          fetch-depth: 0
+      - name: Install Hugo (extended)
+        run: |
+          curl -fSL "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz" \
+            | sudo tar -xz -C /usr/local/bin hugo
+          hugo version
+      - uses: actions/configure-pages@v5
+        id: pages
+        with:
+          enablement: true
+      - name: Build
+        # Pages provides the correct base URL (handles project vs user sites).
+        run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

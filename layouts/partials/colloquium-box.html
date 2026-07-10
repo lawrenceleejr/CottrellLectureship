@@ -1,0 +1,39 @@
+{{/*
+  Renders ONE colloquium box. Context (.) is a single item from a pairing's
+  `colloquia` list — a map with: kind, institution, host{name,role,affiliation},
+  title, date, location, link, abstract. Every field degrades gracefully.
+*/}}
+<article class="colloq">
+  <header class="colloq-head">
+    <span class="colloq-kind">{{ .kind | default "Colloquium" }}</span>
+    <h3 class="colloq-institution">{{ .institution | default "Institution TBA" }}</h3>
+    <p class="colloq-meta">
+      {{ with .date }}
+        {{ $d := time.AsTime . }}
+        <time class="colloq-when" datetime="{{ $d.Format "2006-01-02T15:04" }}">
+          {{ $d.Format "Mon, Jan 2, 2006" }}<span class="dot">·</span>{{ $d.Format "3:04 PM" }}
+        </time>
+      {{ end }}
+      {{ with .location }}<span class="colloq-where">{{ . }}</span>{{ end }}
+    </p>
+  </header>
+
+  {{ with .title }}<p class="colloq-title">&ldquo;{{ . }}&rdquo;</p>{{ end }}
+  {{ with .abstract }}<div class="colloq-abstract">{{ . | markdownify }}</div>{{ end }}
+
+  {{ with .host }}
+    <footer class="colloq-host">
+      <span class="host-label">Hosted by</span>
+      <span class="host-name">{{ .name | default "Host TBA" }}</span>
+      {{ if or .role .affiliation }}
+        <span class="host-meta">
+          {{- with .role }}{{ . }}{{ end -}}
+          {{- if and .role .affiliation }} · {{ end -}}
+          {{- with .affiliation }}{{ . }}{{ end -}}
+        </span>
+      {{ end }}
+    </footer>
+  {{ end }}
+
+  {{ with .link }}<a class="colloq-link" href="{{ . }}">Details &amp; registration <span aria-hidden="true">→</span></a>{{ end }}
+</article>

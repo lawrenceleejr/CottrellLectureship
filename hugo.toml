@@ -1,0 +1,38 @@
+# Site configuration. CI overrides baseURL with the GitHub Pages URL at build time
+# (see .github/workflows/pages.yml), so this value only matters for local builds.
+baseURL = "https://lawrenceleejr.github.io/cottrelllectureship/"
+languageCode = "en-us"
+title = "Cottrell Collaborative Lectureship Series"
+enableRobotsTXT = true
+
+# Order lecture pages newest-first by default (templates also sort explicitly).
+[params]
+  # ---- Edit these for your series ----------------------------------------
+  tagline = "A reciprocal colloquium series pairing Cottrell Scholars across neighboring institutions."
+  funder = "Research Corporation for Science Advancement (RCSA)"
+  funderShort = "RCSA"
+  program = "Cottrell Scholar Collaborative"
+  # Shown in the footer. Replace with a real address (or leave blank to hide).
+  contactEmail = "cottrell-lectures@example.edu"
+  # -----------------------------------------------------------------------
+
+# Allow inline HTML in Markdown content (e.g. the About page).
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+[[menu.main]]
+  name = "Home"
+  pageRef = "/"
+  weight = 10
+[[menu.main]]
+  name = "Speakers"
+  pageRef = "/lectures/"
+  weight = 20
+[[menu.main]]
+  name = "About"
+  pageRef = "/about/"
+  weight = 30
