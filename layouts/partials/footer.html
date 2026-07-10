@@ -1,0 +1,12 @@
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p class="footer-credit">
+      The <strong>{{ site.Title }}</strong> is funded by {{ site.Params.funder }}
+      as part of the {{ site.Params.program }}.
+    </p>
+    {{ with site.Params.contactEmail }}
+      <p class="footer-contact">Questions about hosting or attending? <a href="mailto:{{ . }}">{{ . }}</a></p>
+    {{ end }}
+    <p class="footer-meta">© {{ now.Year }} {{ site.Title }} · Built with <a href="https://gohugo.io">Hugo</a></p>
+  </div>
+</footer>

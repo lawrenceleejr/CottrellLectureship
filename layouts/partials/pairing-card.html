@@ -1,0 +1,42 @@
+{{/*
+  Renders ONE pairing (context . is the Page): the single speaker's header, then
+  the co-equal, linked colloquium boxes. Both boxes are equal-width; a connector
+  (⟷) sits between them and rotates when they stack on narrow screens.
+*/}}
+{{ $sp := .Params.speaker }}
+{{/* Initials for the monogram fallback: strip a leading honorific, then take
+     the first letter of the first and last remaining name words. */}}
+{{ $clean := trim (replaceRE `(?i)^(dr|prof|professor|mr|ms|mrs)\.?\s+` "" $sp.name) " " }}
+{{ $words := split $clean " " }}
+{{ $initials := substr (index $words 0) 0 1 }}
+{{ if gt (len $words) 1 }}{{ $initials = printf "%s%s" $initials (substr (index $words (sub (len $words) 1)) 0 1) }}{{ end }}
+{{ $initials = upper $initials }}
+
+<section class="pairing" id="{{ anchorize $sp.name }}">
+  <div class="pairing-inner wrap">
+    <header class="speaker">
+      {{ with $sp.photo }}
+        <img class="speaker-photo" src="{{ . | relURL }}" alt="Portrait of {{ $sp.name }}" loading="lazy" width="112" height="112">
+      {{ else }}
+        <span class="speaker-monogram" aria-hidden="true">{{ $initials }}</span>
+      {{ end }}
+      <div class="speaker-id">
+        <h2 class="speaker-name"><a href="{{ .RelPermalink }}">{{ $sp.name }}</a></h2>
+        <p class="speaker-meta">
+          {{ with $sp.role }}<span class="badge">{{ . }}</span>{{ end }}
+          {{ with $sp.affiliation }}<span class="speaker-aff">{{ . }}</span>{{ end }}
+          {{ with $sp.field }}<span class="speaker-field">{{ . }}</span>{{ end }}
+        </p>
+      </div>
+    </header>
+
+    <div class="pair" data-count="{{ len .Params.colloquia }}">
+      {{ range $i, $c := .Params.colloquia }}
+        {{ if gt $i 0 }}
+          <div class="pair-link" aria-hidden="true"><span class="pair-link-glyph">⟷</span></div>
+        {{ end }}
+        {{ partial "colloquium-box.html" $c }}
+      {{ end }}
+    </div>
+  </div>
+</section>

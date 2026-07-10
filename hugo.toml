@@ -1,0 +1,42 @@
+# Site configuration. On `main`, CI derives the exact Pages URL via configure-pages
+# and passes it as --baseURL; this value is the fallback for local/branch builds.
+# Change it if you use a custom domain.
+baseURL = "https://lawrenceleejr.github.io/CottrellLectureship/"
+languageCode = "en-us"
+title = "Cottrell Collaborative Lectureship Series"
+enableRobotsTXT = true
+
+# Not a blog — drop the default tag/category taxonomy pages.
+disableKinds = ["taxonomy", "term"]
+
+# Order lecture pages newest-first by default (templates also sort explicitly).
+[params]
+  # ---- Edit these for your series ----------------------------------------
+  tagline = "A reciprocal colloquium series pairing Cottrell Scholars across neighboring institutions."
+  funder = "Research Corporation for Science Advancement (RCSA)"
+  funderShort = "RCSA"
+  program = "Cottrell Scholar Collaborative"
+  # Shown in the footer. Replace with a real address (or leave blank to hide).
+  contactEmail = "cottrell-lectures@example.edu"
+  # -----------------------------------------------------------------------
+
+# Allow inline HTML in Markdown content (e.g. the About page).
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+[[menu.main]]
+  name = "Home"
+  pageRef = "/"
+  weight = 10
+[[menu.main]]
+  name = "Speakers"
+  pageRef = "/lectures/"
+  weight = 20
+[[menu.main]]
+  name = "About"
+  pageRef = "/about/"
+  weight = 30
