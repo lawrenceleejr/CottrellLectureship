@@ -86,11 +86,13 @@ Feature-branch builds stay green even before step 1: `configure-pages` is best-e
 
 ## Fonts
 
-Type is **Fraunces** (display) + **Inter** (body), self-hosted in
-[`static/fonts/`](static/fonts/) so builds need no network. They were generated with the
+Type is a **single typeface — Fraunces** — used across the whole site at two weights
+(400 for text, 600 for headings and emphasis). Hierarchy comes from size, italic, and
+tracking rather than a second family. It is self-hosted in
+[`static/fonts/`](static/fonts/) so builds need no network, and was generated with the
 `typography` skill's `get_fonts.py`:
 
 ```sh
-python3 get_fonts.py --out static/fonts "Fraunces:wght@400;600;900" "Inter:wght@400;500;700"
+python3 get_fonts.py --out static/fonts "Fraunces:wght@400;600"
 # then collapse doubled quotes the tool emits in font-family:  sed -i "s/''/'/g" static/fonts/fonts.css
 ```
