@@ -1,27 +1,31 @@
 {{/*
-  Renders ONE colloquium box. Context (.) is a single item from a pairing's
-  `colloquia` list — a map with: kind, institution, host{name,role,affiliation},
-  title, date, location, link, abstract. Every field degrades gracefully.
+  Renders ONE colloquium box. Context is a dict:
+    c     — a single item from a pairing's `colloquia` list: a map with kind,
+            institution, host{name,role,affiliation}, title, date, location,
+            link, abstract. Every field degrades gracefully.
+    level — heading level for the institution name (int).
 */}}
+{{ $c := .c }}
+{{ $lvl := .level | default 3 }}
 <article class="colloq">
   <header class="colloq-head">
-    <span class="colloq-kind">{{ .kind | default "Colloquium" }}</span>
-    <h3 class="colloq-institution">{{ .institution | default "Institution TBA" }}</h3>
+    <span class="colloq-kind">{{ $c.kind | default "Colloquium" }}</span>
+    <h{{ $lvl }} class="colloq-institution">{{ $c.institution | default "Institution TBA" }}</h{{ $lvl }}>
     <p class="colloq-meta">
-      {{ with .date }}
+      {{ with $c.date }}
         {{ $d := time.AsTime . }}
         <time class="colloq-when" datetime="{{ $d.Format "2006-01-02T15:04" }}">
           {{ $d.Format "Mon, Jan 2, 2006" }}<span class="dot">·</span>{{ $d.Format "3:04 PM" }}
         </time>
       {{ end }}
-      {{ with .location }}<span class="colloq-where">{{ . }}</span>{{ end }}
+      {{ with $c.location }}<span class="colloq-where">{{ . }}</span>{{ end }}
     </p>
   </header>
 
-  {{ with .title }}<p class="colloq-title">&ldquo;{{ . }}&rdquo;</p>{{ end }}
-  {{ with .abstract }}<div class="colloq-abstract">{{ . | markdownify }}</div>{{ end }}
+  {{ with $c.title }}<p class="colloq-title">&ldquo;{{ . }}&rdquo;</p>{{ end }}
+  {{ with $c.abstract }}<div class="colloq-abstract">{{ . | markdownify }}</div>{{ end }}
 
-  {{ with .host }}
+  {{ with $c.host }}
     <footer class="colloq-host">
       <span class="host-label">Hosted by</span>
       <span class="host-name">{{ .name | default "Host TBA" }}</span>
@@ -35,5 +39,5 @@
     </footer>
   {{ end }}
 
-  {{ with .link }}<a class="colloq-link" href="{{ . }}">Details &amp; registration <span aria-hidden="true">→</span></a>{{ end }}
+  {{ with $c.link }}<a class="colloq-link" href="{{ . }}">Details &amp; registration <span aria-hidden="true">→</span></a>{{ end }}
 </article>

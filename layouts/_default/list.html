@@ -8,7 +8,7 @@
 
   <section class="lectures">
     {{ range .Pages.ByDate.Reverse }}
-      {{ partial "pairing-card.html" . }}
+      {{ partial "pairing-card.html" (dict "page" . "level" 2) }}
     {{ else }}
       <p class="wrap empty">No colloquia announced yet — check back soon.</p>
     {{ end }}
