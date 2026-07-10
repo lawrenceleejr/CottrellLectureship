@@ -37,6 +37,7 @@
   --accent:  #12655d;   /* deep teal */
   --accent-ink: #0c4a44;
   --accent-2: #b4531f;  /* terracotta — the "link" */
+  --btn-ink: #fff;      /* text on a solid --accent button */
   --border:  rgba(28, 26, 23, 0.14);
   --border-strong: rgba(28, 26, 23, 0.24);
   --shadow:  0 1px 2px rgba(0,0,0,.04), 0 10px 30px rgba(20,16,10,.07);
@@ -52,6 +53,7 @@
     --accent:  #5cc2b8;
     --accent-ink: #8ad8d0;
     --accent-2: #e08a4f;
+    --btn-ink: #10201d;   /* dark ink: the light-teal accent needs dark text (AA) */
     --border:  rgba(236, 231, 221, 0.15);
     --border-strong: rgba(236, 231, 221, 0.28);
     --shadow:  0 1px 2px rgba(0,0,0,.5), 0 12px 34px rgba(0,0,0,.55);
@@ -130,9 +132,9 @@ img { max-width: 100%; height: auto; display: block; }
 
 .btn {
   display: inline-block; padding: .7rem 1.2rem; border-radius: 999px; font-weight: 600; font-size: var(--f0);
-  text-decoration: none; background: var(--accent); color: #fff; border: 1px solid transparent; transition: transform .05s ease, background .15s ease;
+  text-decoration: none; background: var(--accent); color: var(--btn-ink); border: 1px solid transparent; transition: transform .05s ease, background .15s ease;
 }
-.btn:hover { background: var(--accent-ink); color: #fff; transform: translateY(-1px); }
+.btn:hover { background: var(--accent-ink); color: var(--btn-ink); transform: translateY(-1px); }
 .btn-ghost { background: transparent; color: var(--ink); border-color: var(--border-strong); }
 .btn-ghost:hover { background: var(--surface-2); color: var(--ink); }
 

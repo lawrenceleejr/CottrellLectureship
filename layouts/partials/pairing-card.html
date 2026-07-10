@@ -1,9 +1,13 @@
 {{/*
-  Renders ONE pairing (context . is the Page): the single speaker's header, then
-  the co-equal, linked colloquium boxes. Both boxes are equal-width; a connector
-  (⟷) sits between them and rotates when they stack on narrow screens.
+  Renders ONE pairing. Context is a dict:
+    page  — the Page holding the speaker + colloquia
+    level — heading level for the speaker name (int). On a speaker's own page
+            this is 1 (the name is the page's h1); in listings it is 2.
+  The two co-equal colloquium boxes render their institution one level down.
 */}}
-{{ $sp := .Params.speaker }}
+{{ $page := .page }}
+{{ $lvl := .level | default 2 }}
+{{ $sp := $page.Params.speaker }}
 {{/* Initials for the monogram fallback: strip a leading honorific, then take
      the first letter of the first and last remaining name words. */}}
 {{ $clean := trim (replaceRE `(?i)^(dr|prof|professor|mr|ms|mrs)\.?\s+` "" $sp.name) " " }}
@@ -16,12 +20,12 @@
   <div class="pairing-inner wrap">
     <header class="speaker">
       {{ with $sp.photo }}
-        <img class="speaker-photo" src="{{ . | relURL }}" alt="Portrait of {{ $sp.name }}" loading="lazy" width="112" height="112">
+        <img class="speaker-photo" src="{{ strings.TrimPrefix "/" . | relURL }}" alt="Portrait of {{ $sp.name }}" loading="lazy" width="112" height="112">
       {{ else }}
         <span class="speaker-monogram" aria-hidden="true">{{ $initials }}</span>
       {{ end }}
       <div class="speaker-id">
-        <h2 class="speaker-name"><a href="{{ .RelPermalink }}">{{ $sp.name }}</a></h2>
+        <h{{ $lvl }} class="speaker-name"><a href="{{ $page.RelPermalink }}">{{ $sp.name }}</a></h{{ $lvl }}>
         <p class="speaker-meta">
           {{ with $sp.role }}<span class="badge">{{ . }}</span>{{ end }}
           {{ with $sp.affiliation }}<span class="speaker-aff">{{ . }}</span>{{ end }}
@@ -30,8 +34,8 @@
       </div>
     </header>
 
-    <div class="pair" data-count="{{ len .Params.colloquia }}">
-      {{ range $i, $c := .Params.colloquia }}
+    <div class="pair" data-count="{{ len $page.Params.colloquia }}">
+      {{ range $i, $c := $page.Params.colloquia }}
         {{ if gt $i 0 }}
           <div class="pair-link" aria-hidden="true">
             <span class="pair-link-glyph">
@@ -44,7 +48,7 @@
             </span>
           </div>
         {{ end }}
-        {{ partial "colloquium-box.html" $c }}
+        {{ partial "colloquium-box.html" (dict "c" $c "level" (add $lvl 1)) }}
       {{ end }}
     </div>
   </div>

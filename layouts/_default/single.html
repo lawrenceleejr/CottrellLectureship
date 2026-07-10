@@ -2,14 +2,14 @@
   {{ if .Params.speaker }}
     {{/* A pairing page: the co-equal boxes, plus any speaker bio from the body. */}}
     <article class="single">
-      {{ partial "pairing-card.html" . }}
+      {{ partial "pairing-card.html" (dict "page" . "level" 1) }}
       {{ if .Content }}
         <div class="wrap prose bio">
           {{ .Content }}
         </div>
       {{ end }}
       <div class="wrap back">
-        <a href="{{ "/lectures/" | relURL }}"><span aria-hidden="true">←</span> All speakers</a>
+        <a href="{{ (site.GetPage "/lectures").RelPermalink }}"><span aria-hidden="true">←</span> All speakers</a>
       </div>
     </article>
   {{ else }}

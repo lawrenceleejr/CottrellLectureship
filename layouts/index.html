@@ -7,7 +7,7 @@
       {{ with .Content }}<div class="hero-intro prose">{{ . }}</div>{{ end }}
       <p class="hero-actions">
         <a class="btn" href="#speakers">See the colloquia</a>
-        <a class="btn btn-ghost" href="{{ "/about/" | relURL }}">How the series works</a>
+        <a class="btn btn-ghost" href="{{ (site.GetPage "/about").RelPermalink }}">How the series works</a>
       </p>
     </div>
   </section>
@@ -20,7 +20,7 @@
     </div>
     {{ $pairs := where site.RegularPages "Section" "lectures" }}
     {{ range $pairs.ByDate.Reverse }}
-      {{ partial "pairing-card.html" . }}
+      {{ partial "pairing-card.html" (dict "page" . "level" 2) }}
     {{ else }}
       <p class="wrap empty">No colloquia announced yet — check back soon.</p>
     {{ end }}
