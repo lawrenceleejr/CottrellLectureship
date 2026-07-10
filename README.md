@@ -76,10 +76,13 @@ CI is [`.github/workflows/pages.yml`](.github/workflows/pages.yml):
 
 To publish:
 
-1. Merge this branch into **`main`** (open a PR when ready).
-2. In the repo: **Settings → Pages → Source: GitHub Actions**. *(The workflow also tries
-   to enable this automatically on its first run via `configure-pages: enablement`.)*
-3. The site publishes at **https://lawrenceleejr.github.io/cottrelllectureship/**.
+1. In the repo: **Settings → Pages → Source: GitHub Actions** (one-time).
+2. Merge this branch into **`main`** (open a PR when ready).
+3. The site publishes at **https://lawrenceleejr.github.io/CottrellLectureship/**.
+
+Feature-branch builds stay green even before step 1: `configure-pages` is best-effort
+(`continue-on-error`), and the build falls back to the `baseURL` in `hugo.toml`. On `main`,
+`configure-pages` supplies the authoritative Pages URL.
 
 ## Fonts
 

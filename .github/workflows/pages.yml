@@ -1,7 +1,7 @@
 # Build the Hugo site on every push/PR; deploy to GitHub Pages only from main.
-# Repo setting (fallback): Settings -> Pages -> Source: GitHub Actions.
-# `enablement: true` below auto-enables Pages on the first run so branch builds
-# are green immediately; the manual setting is only needed if that lacks permission.
+# Required repo setting (one time): Settings -> Pages -> Source: GitHub Actions.
+# configure-pages is best-effort (continue-on-error) so feature-branch builds stay
+# green before Pages is enabled; on main it supplies the authoritative base URL.
 name: pages
 
 on:
@@ -22,9 +22,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write          # allow configure-pages `enablement: true` to enable Pages
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,11 +34,11 @@ jobs:
           hugo version
       - uses: actions/configure-pages@v5
         id: pages
-        with:
-          enablement: true
+        continue-on-error: true   # Pages may not be enabled yet on feature branches
       - name: Build
-        # Pages provides the correct base URL (handles project vs user sites).
-        run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+        # Use the Pages-provided base URL once Pages is enabled (correct on main);
+        # fall back to the configured project URL so branch builds stay green.
+        run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url || 'https://lawrenceleejr.github.io/CottrellLectureship' }}/"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./public

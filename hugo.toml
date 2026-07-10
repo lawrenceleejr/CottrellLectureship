@@ -1,6 +1,7 @@
-# Site configuration. CI overrides baseURL with the GitHub Pages URL at build time
-# (see .github/workflows/pages.yml), so this value only matters for local builds.
-baseURL = "https://lawrenceleejr.github.io/cottrelllectureship/"
+# Site configuration. On `main`, CI derives the exact Pages URL via configure-pages
+# and passes it as --baseURL; this value is the fallback for local/branch builds.
+# Change it if you use a custom domain.
+baseURL = "https://lawrenceleejr.github.io/CottrellLectureship/"
 languageCode = "en-us"
 title = "Cottrell Collaborative Lectureship Series"
 enableRobotsTXT = true
