@@ -5,6 +5,9 @@ languageCode = "en-us"
 title = "Cottrell Collaborative Lectureship Series"
 enableRobotsTXT = true
 
+# Not a blog — drop the default tag/category taxonomy pages.
+disableKinds = ["taxonomy", "term"]
+
 # Order lecture pages newest-first by default (templates also sort explicitly).
 [params]
   # ---- Edit these for your series ----------------------------------------
