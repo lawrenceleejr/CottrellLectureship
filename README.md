@@ -141,13 +141,19 @@ Feature-branch builds stay green even before step 1: `configure-pages` is best-e
 
 ## Fonts
 
-Type is a **single typeface — Fraunces** — used across the whole site at two weights
-(400 for text, 600 for headings and emphasis). Hierarchy comes from size, italic, and
-tracking rather than a second family. It is self-hosted in
-[`static/fonts/`](static/fonts/) so builds need no network, and was generated with the
-`typography` skill's `get_fonts.py`:
+Type is a **single typeface — Fraunces** — carrying the whole site. It ships as a
+**variable font** with two live axes: **weight** (100–900) and **optical size** (9–144),
+plus a **real italic**. `font-optical-sizing: auto` (in `main.css`) means big type picks
+up Fraunces' high-contrast display forms and body text its sturdier reading forms, so the
+hierarchy comes from the typeface itself — size, weight, optical size, and italic — never
+a second family.
+
+It is self-hosted in [`static/fonts/`](static/fonts/) (so builds need no network) as two
+styles × three unicode subsets; the browser fetches only the ranges a page uses. The
+files come straight from the [`@fontsource-variable/fraunces`](https://fontsource.org/fonts/fraunces)
+package — copy its `fraunces-*-standard-{normal,italic}.woff2` cuts into `static/fonts/`
+and they're already wired up in [`fonts.css`](static/fonts/fonts.css):
 
 ```sh
-python3 get_fonts.py --out static/fonts "Fraunces:wght@400;600"
-# then collapse doubled quotes the tool emits in font-family:  sed -i "s/''/'/g" static/fonts/fonts.css
+npm pack @fontsource-variable/fraunces   # or install it; the woff2 live under files/
 ```

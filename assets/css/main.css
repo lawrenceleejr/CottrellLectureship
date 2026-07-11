@@ -1,14 +1,16 @@
 /* =========================================================================
    Cottrell Lectureship Series
-   Editorial theme — a single typeface, Fraunces, self-hosted (weights 400/600).
-   Hierarchy comes from size, italic, and tracking. Light + dark. No dependencies.
+   Editorial theme — a single typeface, Fraunces, self-hosted as a VARIABLE font
+   (weight 100–900 + optical-size 9–144, with a real italic). Hierarchy comes from
+   size, weight, optical size, italic, and tracking — never a second family.
+   Light + dark. No dependencies.
    ========================================================================= */
 
 :root {
   /* One typeface for the whole site (system serif fallbacks if it fails to load) */
   --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
 
-  /* Modular scale, ratio 1.25 from 1rem */
+  /* Modular scale, ratio 1.25 from 1rem, extended at the top for display type */
   --f-1: 0.8rem;
   --f0:  1rem;
   --f1:  1.25rem;
@@ -16,6 +18,8 @@
   --f3:  1.953rem;
   --f4:  2.441rem;
   --f5:  3.052rem;
+  --f6:  3.815rem;
+  --f7:  4.768rem;
 
   /* Spacing */
   --sp-1: 0.25rem;
@@ -26,6 +30,7 @@
   --sp-6: 4rem;
 
   --wrap: 72rem;
+  --measure: 65ch;
   --radius: 14px;
 
   /* Light palette (warm paper) */
@@ -40,6 +45,7 @@
   --btn-ink: #fff;      /* text on a solid --accent button */
   --border:  rgba(28, 26, 23, 0.14);
   --border-strong: rgba(28, 26, 23, 0.24);
+  --rule:    rgba(28, 26, 23, 0.9);   /* near-ink hairline for editorial rules */
   --shadow:  0 1px 2px rgba(0,0,0,.04), 0 10px 30px rgba(20,16,10,.07);
 }
 
@@ -56,8 +62,17 @@
     --btn-ink: #10201d;   /* dark ink: the light-teal accent needs dark text (AA) */
     --border:  rgba(236, 231, 221, 0.15);
     --border-strong: rgba(236, 231, 221, 0.28);
+    --rule:    rgba(236, 231, 221, 0.82);
     --shadow:  0 1px 2px rgba(0,0,0,.5), 0 12px 34px rgba(0,0,0,.55);
   }
+}
+:root[data-theme="dark"] {
+  --paper:   #141210; --surface: #1e1a15; --surface-2: #262019;
+  --ink: #ece7dd; --muted: #a89f92; --accent: #5cc2b8; --accent-ink: #8ad8d0;
+  --accent-2: #e08a4f; --btn-ink: #10201d;
+  --border: rgba(236,231,221,0.15); --border-strong: rgba(236,231,221,0.28);
+  --rule: rgba(236,231,221,0.82);
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 12px 34px rgba(0,0,0,.55);
 }
 
 /* ------------------------------------------------------------------ base */
@@ -68,18 +83,23 @@ html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-t
 body {
   margin: 0;
   font-family: var(--font-serif);
+  font-optical-sizing: auto;          /* opsz follows font-size: display forms big, text forms small */
   font-size: var(--f0);
-  line-height: 1.6;
+  line-height: 1.62;
   color: var(--ink);
   background: var(--paper);
+  font-feature-settings: "kern", "liga", "calt";
+  font-variant-numeric: proportional-nums;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-h1, h2, h3, h4 { line-height: 1.15; font-weight: 600; margin: 0 0 var(--sp-3); text-wrap: balance; }
+h1, h2, h3, h4 { line-height: 1.12; font-weight: 600; margin: 0 0 var(--sp-3); text-wrap: balance; }
 
-/* Only two weights ship (400/600); map bold to the real 600 cut, never synthesize. */
+/* The whole weight axis is real — no synthesized bold or italic. */
 strong, b { font-weight: 600; }
+em, i, cite { font-style: italic; }
+:where(h1, h2, h3, h4) em { font-style: italic; }
 
 a { color: var(--accent-ink); text-decoration-thickness: 1px; text-underline-offset: 2px; }
 a:hover { color: var(--accent-2); }
@@ -94,6 +114,20 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .skip-link:focus { left: 0; }
 
+/* A small utility: the two-ring motif, drawn wherever the pairing idea appears. */
+.rings { display: inline-block; flex: none; overflow: visible; vertical-align: middle; }
+.rings circle { fill: none; stroke-width: 1.6; }
+.rings .ring-a { stroke: var(--accent); }
+.rings .ring-b { stroke: var(--accent-2); }
+
+/* eyebrow / kicker label, optionally trailed by a hairline rule */
+.eyebrow {
+  font-size: var(--f-1); font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); margin: 0;
+}
+.eyebrow--rule { display: flex; align-items: center; gap: var(--sp-3); }
+.eyebrow--rule::after { content: ""; flex: 1; height: 1px; background: var(--border-strong); }
+
 /* --------------------------------------------------------------- header */
 .site-header {
   position: sticky; top: 0; z-index: 20;
@@ -105,7 +139,7 @@ img { max-width: 100%; height: auto; display: block; }
 .brand { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--ink); }
 .brand:hover { color: var(--ink); }
 .brand-mark {
-  width: 26px; height: 16px; flex: none;
+  width: 28px; height: 17px; flex: none;
   /* Drawn as a viewBox SVG (like the favicon) so the two rings scale as one
      unit at every zoom level; overflow:visible keeps the stroke edges from
      being clipped by device-pixel rounding at fractional zooms. */
@@ -114,7 +148,7 @@ img { max-width: 100%; height: auto; display: block; }
 .brand-ring { fill: none; stroke-width: 1.5; }
 .brand-ring--a { stroke: var(--accent); }
 .brand-ring--b { stroke: var(--accent-2); }
-.brand-title { font-weight: 600; font-size: var(--f1); letter-spacing: -0.01em; }
+.brand-title { font-weight: 600; font-size: var(--f1); letter-spacing: -0.015em; }
 .site-nav { display: flex; gap: clamp(.75rem, 2.5vw, 1.5rem); flex-wrap: wrap; }
 .site-nav a {
   color: var(--muted); text-decoration: none; font-size: var(--f0);
@@ -124,31 +158,77 @@ img { max-width: 100%; height: auto; display: block; }
 .site-nav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent-2); }
 
 /* ----------------------------------------------------------------- hero */
-.hero { padding-block: clamp(2.5rem, 8vw, 5.5rem) var(--sp-5); }
-.hero-kicker {
-  font-size: var(--f-1); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--accent); margin: 0 0 var(--sp-3);
+/* A typographic masthead. No decorative art — the type carries it, and an optional
+   photograph (set `heroImage` in the home page front matter) slots in beside it. */
+.hero { padding-block: clamp(2.5rem, 7vw, 5rem) var(--sp-5); }
+.hero-inner { display: grid; gap: clamp(1.5rem, 4vw, var(--sp-5)); }
+.hero--with-image .hero-inner {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+  align-items: center;
 }
-.hero-title { font-size: clamp(2.2rem, 6vw, var(--f5)); letter-spacing: -0.02em; margin: 0 0 var(--sp-3); max-width: 16ch; }
-.hero-tagline { font-size: clamp(1.1rem, 2.4vw, var(--f2)); color: var(--muted); max-width: 42ch; margin: 0 0 var(--sp-4); font-weight: 400; }
-.hero-intro { color: var(--ink); }
-.hero-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-4); }
+.hero-kicker { margin-bottom: var(--sp-4); }
+.hero-title {
+  font-size: clamp(2.6rem, 7.2vw, var(--f7));
+  font-weight: 740; letter-spacing: -0.028em; line-height: 1.02;
+  margin: 0; max-width: 15ch;
+}
+.hero-title .amp { color: var(--accent-2); font-style: italic; font-weight: 500; }
+.hero-deck {
+  font-style: italic; font-weight: 400;
+  font-size: clamp(1.25rem, 2.6vw, var(--f2));
+  color: var(--ink); max-width: 34ch; margin: var(--sp-4) 0 0; line-height: 1.32;
+}
+.hero-lead { color: var(--ink); max-width: 46ch; margin: var(--sp-4) 0 0; }
+.hero--with-image .hero-lead { max-width: 42ch; }
+
+/* the definition band: three plain facts, ruled like a specimen strip */
+.hero-band {
+  display: flex; flex-wrap: wrap; margin: var(--sp-5) 0 0;
+  border-block: 1px solid var(--rule);
+}
+.hero-band > div {
+  flex: 1 1 8rem; padding: var(--sp-3) var(--sp-4) var(--sp-3) 0; margin-right: var(--sp-4);
+  border-right: 1px solid var(--border);
+}
+.hero-band > div:last-child { border-right: 0; margin-right: 0; }
+.hero-band dt {
+  font-size: var(--f-1); letter-spacing: .13em; text-transform: uppercase; color: var(--muted);
+  margin: 0 0 .2rem;
+}
+.hero-band dd { margin: 0; font-size: var(--f1); font-weight: 600; font-style: italic; }
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-5); }
+
+.hero-figure { margin: 0; }
+.hero-figure img {
+  width: 100%; border-radius: var(--radius); border: 1px solid var(--border);
+  box-shadow: var(--shadow); object-fit: cover;
+}
+.hero-figure figcaption { margin-top: var(--sp-2); font-size: var(--f-1); color: var(--muted); font-style: italic; }
 
 .btn {
-  display: inline-block; padding: .7rem 1.2rem; border-radius: 999px; font-weight: 600; font-size: var(--f0);
-  text-decoration: none; background: var(--accent); color: var(--btn-ink); border: 1px solid transparent; transition: transform .05s ease, background .15s ease;
+  display: inline-block; padding: .72rem 1.3rem; border-radius: 999px; font-weight: 600; font-size: var(--f0);
+  text-decoration: none; background: var(--accent); color: var(--btn-ink); border: 1px solid transparent;
+  transition: transform .05s ease, background .15s ease;
 }
 .btn:hover { background: var(--accent-ink); color: var(--btn-ink); transform: translateY(-1px); }
 .btn-ghost { background: transparent; color: var(--ink); border-color: var(--border-strong); }
 .btn-ghost:hover { background: var(--surface-2); color: var(--ink); }
 
+@media (max-width: 820px) {
+  .hero--with-image .hero-inner { grid-template-columns: 1fr; }
+  .hero--with-image .hero-figure { order: -1; }
+}
+
 /* ------------------------------------------------------------- sections */
 .site-main { padding-bottom: var(--sp-6); }
-.section-head { margin-block: var(--sp-5) var(--sp-4); }
-.section-title { font-size: var(--f3); margin-bottom: var(--sp-2); }
+.section-head { margin-block: var(--sp-6) var(--sp-4); }
+.section-eyebrow { display: flex; align-items: center; gap: .6rem; margin-bottom: var(--sp-2); }
+.section-eyebrow .rings { width: 34px; height: 20px; }
+.section-title { font-size: var(--f3); font-weight: 600; letter-spacing: -0.01em; margin-bottom: var(--sp-2); }
 .section-sub { color: var(--muted); max-width: 58ch; }
-.page-head { padding-block: clamp(2rem, 6vw, 3.5rem) var(--sp-3); border-bottom: 1px solid var(--border); margin-bottom: var(--sp-5); }
-.page-title { font-size: clamp(1.9rem, 5vw, var(--f4)); }
+.page-head { padding-block: clamp(2rem, 6vw, 3.5rem) var(--sp-3); border-bottom: 1px solid var(--rule); margin-bottom: var(--sp-5); }
+.page-title { font-size: clamp(2rem, 5.4vw, var(--f5)); font-weight: 700; letter-spacing: -0.022em; }
 .empty { color: var(--muted); font-style: italic; padding-block: var(--sp-5); }
 .section-more { margin-top: var(--sp-5); }
 
@@ -174,7 +254,7 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--accent); background: var(--surface-2);
   letter-spacing: 0.02em;
 }
-.speaker-name { font-size: var(--f2); margin: 0 0 var(--sp-2); }
+.speaker-name { font-size: var(--f2); font-weight: 600; letter-spacing: -0.015em; margin: 0 0 var(--sp-2); }
 .speaker-name a { color: var(--ink); text-decoration: none; }
 .speaker-name a:hover { color: var(--accent-2); }
 .speaker-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; margin: 0; color: var(--muted); font-size: var(--f0); }
@@ -184,17 +264,18 @@ img { max-width: 100%; height: auto; display: block; }
   padding: .15rem .6rem; border-radius: 999px;
 }
 .speaker-aff { color: var(--ink); }
-.speaker-field::before { content: "·"; margin-right: .6rem; color: var(--border-strong); }
+.speaker-field { font-style: italic; }
+.speaker-field::before { content: "·"; margin-right: .6rem; color: var(--border-strong); font-style: normal; }
 
 /* the equal, linked pair */
 .pair { display: flex; align-items: stretch; gap: var(--sp-3); }
 .pair-link { flex: 0 0 auto; align-self: center; display: grid; place-items: center; }
-.pair-link-glyph {
-  display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%;
-  background: var(--surface); border: 1px solid var(--border-strong);
-  color: var(--accent-2); box-shadow: 0 1px 3px rgba(0,0,0,.08);
-}
-.pair-link-glyph svg { display: block; width: 1.15rem; height: 1.15rem; }
+/* the two-ring motif is the connective tissue between the paired talks */
+.pair-rings { width: 3rem; height: 1.9rem; overflow: visible; }
+.pair-rings circle { fill: none; stroke-width: 1.7; }
+.pair-rings .ring-a { stroke: var(--accent); }
+.pair-rings .ring-b { stroke: var(--accent-2); }
+.pair-rings .ring-fill { fill: var(--accent); opacity: .09; stroke: none; }
 
 /* one colloquium box — equal (flex:1 1 0) */
 .colloq {
@@ -206,16 +287,18 @@ img { max-width: 100%; height: auto; display: block; }
   border-radius: 10px;
   padding: var(--sp-4);
 }
+.colloq:last-child { border-top-color: var(--accent-2); }  /* partner talk keyed terracotta */
 .colloq-head { margin-bottom: var(--sp-3); }
 .colloq-kind {
   font-size: var(--f-1); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
 }
-.colloq-institution { font-size: var(--f1); margin: .3rem 0 .4rem; }
+.colloq:last-child .colloq-kind { color: var(--accent-2); }
+.colloq-institution { font-size: var(--f1); font-weight: 600; margin: .3rem 0 .4rem; }
 .colloq-meta { display: flex; flex-wrap: wrap; gap: .35rem .75rem; margin: 0; color: var(--muted); font-size: var(--f0); }
-.colloq-when { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.colloq-when { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; }
 .colloq-when .dot { margin-inline: .4rem; color: var(--border-strong); }
 .colloq-where::before { content: "📍 "; }
-.colloq-title { font-family: var(--font-serif); font-size: var(--f1); font-style: italic; color: var(--ink); margin: 0 0 var(--sp-2); }
+.colloq-title { font-family: var(--font-serif); font-size: var(--f2); font-style: italic; font-weight: 500; color: var(--ink); margin: 0 0 var(--sp-2); line-height: 1.2; }
 .colloq-abstract { color: var(--ink); font-size: var(--f0); }
 .colloq-abstract p { margin: 0 0 var(--sp-2); }
 .colloq-abstract :last-child { margin-bottom: 0; }
@@ -231,33 +314,57 @@ img { max-width: 100%; height: auto; display: block; }
 .colloq-link { margin-top: var(--sp-3); font-weight: 600; text-decoration: none; align-self: start; }
 .colloq-link:hover { text-decoration: underline; }
 
-/* stack on narrow screens; rotate the connector to point down */
+/* stack on narrow screens; the rings read the same rotated to point down */
 @media (max-width: 760px) {
   .pair { flex-direction: column; }
   .pair-link { align-self: center; }
-  .pair-link-glyph { transform: rotate(90deg); }
   .speaker { flex-direction: column; text-align: center; }
   .speaker-meta { justify-content: center; }
 }
 
 /* ----------------------------------------------------------- prose/body */
-.prose { max-width: 65ch; }
+.prose { max-width: var(--measure); font-variant-numeric: oldstyle-nums proportional-nums; }
 .prose > * + * { margin-top: var(--sp-3); }
-.prose h2 { font-size: var(--f2); margin-top: var(--sp-5); }
-.prose h3 { font-size: var(--f1); margin-top: var(--sp-4); }
+.prose h2 { font-size: var(--f3); font-weight: 600; letter-spacing: -0.01em; margin-top: var(--sp-6); }
+.prose h3 { font-size: var(--f2); font-weight: 600; margin-top: var(--sp-5); }
 .prose ul, .prose ol { padding-left: 1.4rem; }
-.prose li + li { margin-top: .35rem; }
-.prose blockquote {
-  margin: var(--sp-4) 0; padding: .5rem 0 .5rem 1.2rem; border-left: 3px solid var(--accent);
-  color: var(--muted); font-style: italic;
+.prose li + li { margin-top: .45rem; }
+.prose ol { list-style: none; counter-reset: step; padding-left: 0; }
+.prose ol > li { counter-increment: step; padding-left: 3rem; position: relative; min-height: 2rem; }
+.prose ol > li::before {
+  content: counter(step); position: absolute; left: 0; top: -.1em;
+  font-size: var(--f2); font-weight: 600; font-style: italic; color: var(--accent-2);
+  font-variant-numeric: lining-nums; line-height: 1;
 }
-.single .bio { margin-top: var(--sp-5); }
+
+/* a proper lead paragraph, with a real drop cap set from the display cut */
+.lead { font-size: var(--f1); line-height: 1.5; color: var(--ink); max-width: var(--measure); }
+.dropcap::first-letter,
+.dropcap > p:first-of-type::first-letter,
+.bio > p:first-of-type::first-letter {
+  float: left; font-weight: 700; color: var(--accent-2);
+  font-size: 3.6em; line-height: .74; padding: .02em .12em 0 0;
+  font-optical-sizing: auto; font-style: normal;
+}
+
+/* pull quote — a line worth stopping on */
+.pullquote, .prose blockquote {
+  margin: var(--sp-5) 0; padding: 0 0 0 1.3rem; border-left: 3px solid var(--accent);
+  color: var(--ink); font-style: italic; font-size: var(--f2); line-height: 1.32; font-weight: 400;
+  max-width: 32ch;
+}
+.prose blockquote { font-size: var(--f1); color: var(--muted); max-width: none; }
+.pullquote cite, .prose blockquote cite { display: block; margin-top: var(--sp-2); font-size: var(--f-1); font-style: normal; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+
+.single .bio { margin-top: var(--sp-6); }
 .single .back, .page .wrap { margin-top: var(--sp-5); }
 .back a { font-weight: 600; text-decoration: none; }
 
 /* --------------------------------------------------------------- footer */
-.site-footer { border-top: 1px solid var(--border); background: var(--surface-2); margin-top: var(--sp-6); }
+.site-footer { border-top: 1px solid var(--rule); background: var(--surface-2); margin-top: var(--sp-6); }
 .footer-inner { padding-block: var(--sp-5); color: var(--muted); }
+.footer-brand { display: flex; align-items: center; gap: .55rem; margin: 0 0 var(--sp-3); }
+.footer-brand .rings { width: 30px; height: 18px; }
 .footer-credit { max-width: 60ch; color: var(--ink); margin: 0 0 var(--sp-2); }
 .footer-contact { margin: 0 0 var(--sp-2); }
 .footer-meta { font-size: var(--f-1); margin: 0; }

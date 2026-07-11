@@ -38,14 +38,11 @@
       {{ range $i, $c := $page.Params.colloquia }}
         {{ if gt $i 0 }}
           <div class="pair-link" aria-hidden="true">
-            <span class="pair-link-glyph">
-              <svg viewBox="0 0 28 28" width="18" height="18" fill="none" stroke="currentColor"
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="5" y1="14" x2="23" y2="14"/>
-                <polyline points="9.5,8.5 4,14 9.5,19.5"/>
-                <polyline points="18.5,8.5 24,14 18.5,19.5"/>
-              </svg>
-            </span>
+            {{/* the two-ring motif: one trip, two linked talks */}}
+            <svg class="pair-rings" viewBox="0 0 46 28" fill="none" focusable="false">
+              <circle class="ring-a" cx="18" cy="14" r="11"/>
+              <circle class="ring-b" cx="28" cy="14" r="11"/>
+            </svg>
           </div>
         {{ end }}
         {{ partial "colloquium-box.html" (dict "c" $c "level" (add $lvl 1)) }}
