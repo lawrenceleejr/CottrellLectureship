@@ -106,10 +106,14 @@ img { max-width: 100%; height: auto; display: block; }
 .brand:hover { color: var(--ink); }
 .brand-mark {
   width: 26px; height: 16px; flex: none;
-  background:
-    radial-gradient(circle at 8px 8px, transparent 4.5px, var(--accent) 5px 6.5px, transparent 7px),
-    radial-gradient(circle at 18px 8px, transparent 4.5px, var(--accent-2) 5px 6.5px, transparent 7px);
+  /* Drawn as a viewBox SVG (like the favicon) so the two rings scale as one
+     unit at every zoom level; overflow:visible keeps the stroke edges from
+     being clipped by device-pixel rounding at fractional zooms. */
+  overflow: visible;
 }
+.brand-ring { fill: none; stroke-width: 1.5; }
+.brand-ring--a { stroke: var(--accent); }
+.brand-ring--b { stroke: var(--accent-2); }
 .brand-title { font-weight: 600; font-size: var(--f1); letter-spacing: -0.01em; }
 .site-nav { display: flex; gap: clamp(.75rem, 2.5vw, 1.5rem); flex-wrap: wrap; }
 .site-nav a {
