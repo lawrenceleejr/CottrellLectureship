@@ -1,0 +1,45 @@
+{{ define "head-extra" }}
+  {{/* Self-hosted Leaflet + MarkerCluster (static/vendor) — no CDN, no build-time network. */}}
+  <link rel="stylesheet" href="{{ "vendor/leaflet/leaflet.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "vendor/leaflet/MarkerCluster.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "vendor/leaflet/MarkerCluster.Default.css" | relURL }}">
+  {{ with resources.Get "css/map.css" }}
+    {{ $css := . | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+  {{ end }}
+{{ end }}
+
+{{ define "main" }}
+  <section class="page-head">
+    <div class="wrap">
+      <h1 class="page-title">{{ .Title }}</h1>
+      {{ with .Content }}<div class="prose section-sub map-intro">{{ . }}</div>{{ end }}
+    </div>
+  </section>
+
+  <section class="map-section">
+    <div class="wrap">
+      <div class="map-shell">
+        <div id="cs-map" class="cs-map" role="application"
+             aria-label="Map of US and Canada colleges and universities, with Cottrell Scholar institutions highlighted"
+             data-colleges="{{ "data/colleges.json" | relURL }}"
+             data-scholars="{{ "data/scholars.json" | relURL }}"
+             data-meta="{{ "data/meta.json" | relURL }}">
+          <noscript>
+            <p class="map-noscript">This interactive map needs JavaScript. The underlying data is
+            available in <code>static/data/scholars.json</code> and <code>static/data/colleges.json</code>.</p>
+          </noscript>
+        </div>
+      </div>
+      <p class="map-note" id="cs-map-note"></p>
+    </div>
+  </section>
+
+  {{/* Data URLs are read from the #cs-map element's data-* attributes (see map.js). */}}
+  <script src="{{ "vendor/leaflet/leaflet.js" | relURL }}"></script>
+  <script src="{{ "vendor/leaflet/leaflet.markercluster.js" | relURL }}"></script>
+  {{ with resources.Get "js/map.js" }}
+    {{ $js := . | minify | fingerprint }}
+    <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+  {{ end }}
+{{ end }}
