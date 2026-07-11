@@ -25,11 +25,11 @@ colloquia:
       properties before ever making it? This colloquium covers how computation and
       synthesis together are producing a new generation of quantum materials.
   - kind: "Colloquium"
-    institution: "Prairie State College"
+    institution: "Prairie State University"
     host:
       name: "Dr. Grace Adeyemi"
-      role: "Cottrell Scholar 2020"
-      affiliation: "Prairie State College, Dept. of Chemistry & Physics"
+      role: "Regional partner"
+      affiliation: "Prairie State University, Dept. of Chemistry & Physics"
     title: "Designing Quantum Materials from Scratch"
     date: 2026-04-21T15:30:00
     location: "Founders Hall Auditorium"

@@ -1,11 +1,11 @@
-# Cottrell Collaborative Lectureship Series — website
+# Cottrell Lectureship Series — website
 
 A [Hugo](https://gohugo.io) website advertising a lectureship series funded by the
-**Research Corporation for Science Advancement (RCSA)** as part of the **Cottrell Scholar
-Collaborative**. The series pairs Cottrell Scholars: one hosts the other for a colloquium,
-and the visiting scholar gives a **second, equal colloquium at a neighboring
-institution**. Each visit is shown as **two linked boxes** — one per colloquium, each with
-its host.
+**Research Corporation for Science Advancement (RCSA)** as **a Cottrell Collaborative
+project**. Each visit brings a **teacher-scholar** to a region to give **two talks** in a
+single trip — one hosted by a Cottrell Scholar, the other by a regional partner at a nearby
+college or university. Each visit is shown as **two linked boxes** — one per talk, each
+with its host.
 
 Built with the skills in <https://github.com/lawrenceleejr/skills_larry> (`static-site`,
 `typography`, `git-workflow`, `docker-run`).
@@ -26,7 +26,7 @@ speaker:                    # exactly one speaker per pair
   field: "Physical Chemistry"
   photo: "/images/rivera.jpg"   # OPTIONAL — omit for an initials monogram
   website: "https://example.edu/rivera"
-colloquia:                  # the two equal, linked boxes (both colloquia)
+colloquia:                  # the two linked talks (one per host)
   - kind: "Colloquium"
     institution: "State University"
     host: { name: "Dr. Alex Chen", role: "Cottrell Scholar 2019", affiliation: "State University" }
@@ -43,7 +43,7 @@ colloquia:                  # the two equal, linked boxes (both colloquia)
     date: 2026-03-13T15:00:00
     location: "Science Center Auditorium"
     abstract: |
-      The paired colloquium at the neighboring institution.
+      The paired talk at the nearby institution.
 ---
 
 Optional speaker bio in Markdown (shown on the visit's own page).

@@ -1,5 +1,5 @@
 /* =========================================================================
-   Cottrell Collaborative Lectureship Series
+   Cottrell Lectureship Series
    Editorial theme — a single typeface, Fraunces, self-hosted (weights 400/600).
    Hierarchy comes from size, italic, and tracking. Light + dark. No dependencies.
    ========================================================================= */
@@ -146,6 +146,7 @@ img { max-width: 100%; height: auto; display: block; }
 .page-head { padding-block: clamp(2rem, 6vw, 3.5rem) var(--sp-3); border-bottom: 1px solid var(--border); margin-bottom: var(--sp-5); }
 .page-title { font-size: clamp(1.9rem, 5vw, var(--f4)); }
 .empty { color: var(--muted); font-style: italic; padding-block: var(--sp-5); }
+.section-more { margin-top: var(--sp-5); }
 
 /* ------------------------------------------------------- pairing / card */
 .pairing { margin-block: var(--sp-5); }
