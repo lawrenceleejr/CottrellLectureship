@@ -12,6 +12,7 @@ speaker:
 colloquia:
   - kind: "Colloquium"
     institution: "Metro University"
+    coords: [41.88, -87.63]
     host:
       name: "Dr. Liam Walsh"
       role: "Cottrell Scholar 2022"
@@ -26,6 +27,7 @@ colloquia:
       synthesis together are producing a new generation of quantum materials.
   - kind: "Colloquium"
     institution: "Prairie State University"
+    coords: [40.11, -88.24]
     host:
       name: "Dr. Grace Adeyemi"
       role: "Regional partner"

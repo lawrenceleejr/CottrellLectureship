@@ -29,6 +29,8 @@ speaker:                    # exactly one speaker per pair
 colloquia:                  # the two linked talks (one per host)
   - kind: "Colloquium"
     institution: "State University"
+    coords: [40.00, -83.02]   # OPTIONAL — [lat, lon] to pin this host on the map; omit to
+                              # place it by matching the institution name to the map data
     host: { name: "Dr. Alex Chen", role: "Cottrell Scholar 2019", affiliation: "State University" }
     title: "Watching Molecules Move in Real Time"
     date: 2026-03-12T16:00:00
@@ -50,6 +52,9 @@ Optional speaker bio in Markdown (shown on the visit's own page).
 ```
 
 - **Ordering** is automatic: newest `date` first.
+- **Map pins** — each host institution is flagged on the [Map](content/map.md) with a teal
+  pin. It's placed automatically when the `institution` name matches a campus in the map
+  data; otherwise, or to override, give the colloquium an explicit `coords: [lat, lon]`.
 - **Headshots** are optional — drop an image in [`static/images/`](static/images/) and set
   `speaker.photo`, or omit it for a monogram.
 - Series-wide text (title, tagline, funder, contact email) lives in
@@ -62,9 +67,10 @@ Optional speaker bio in Markdown (shown on the visit's own page).
 The [**Map**](content/map.md) page (`/map/`) plots **every college and university in the US
 and Canada** as a dot, and highlights — in terracotta — every institution that is home to a
 **Cottrell Scholar**. It's a quick way to see which nearby campuses could pair up for a
-collaborative lectureship. Click any dot for details (a scholar campus lists its scholars,
-their award years and disciplines); a toggle hides the grey dots to show only scholar
-campuses. The map is [Leaflet](https://leafletjs.com), self-hosted in
+collaborative lectureship. Institutions that have **hosted a visit** in the series carry a
+prominent **teal pin** on top, whose popup links back to the talks. Click any dot for
+details (a scholar campus lists its scholars, their award years and disciplines); the legend
+toggles each layer — hosts, scholar campuses, and the grey college dots — on or off. The map is [Leaflet](https://leafletjs.com), self-hosted in
 [`static/vendor/leaflet/`](static/vendor/leaflet/) (no CDN); only the background map tiles
 load from the network at view time.
 

@@ -12,6 +12,7 @@ speaker:
 colloquia:
   - kind: "Colloquium"
     institution: "Highland University"
+    coords: [40.01, -105.27]
     host:
       name: "Dr. Priya Nair"
       role: "Cottrell Scholar 2017"
@@ -26,6 +27,7 @@ colloquia:
       matter across cosmic time.
   - kind: "Colloquium"
     institution: "Lakeside College"
+    coords: [40.42, -104.71]
     host:
       name: "Dr. Sofia Marín"
       role: "Cottrell Scholar 2021"

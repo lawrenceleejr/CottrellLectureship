@@ -157,6 +157,10 @@
   // so they don't interfere with dot taps).
   map.createPane("cs-scholar");
   map.getPane("cs-scholar").style.zIndex = 640;
+  // Lectureship-host pins ride above every dot and cluster (but below the radius
+  // centre pin at 665) so they always read as the map's highlights.
+  map.createPane("cs-host");
+  map.getPane("cs-host").style.zIndex = 660;
   var radiusRenderer = L.svg({ pane: "cs-radius" });
 
   // --------------------------------------------------------------- helpers
@@ -253,6 +257,13 @@
     iconCreateFunction: clusterIcon("scholar")
   });
 
+  // Lectureship hosts: a small, always-visible pin layer, never clustered so every
+  // host institution stays individually pickable at any zoom.
+  var hostGroup = L.layerGroup();
+  var hostMarkers = [];
+  var nameIndex = null;
+  var hostStats = { placed: 0, total: 0, unplaced: [] };
+
   // Every institution as a unified record: the raw data, its marker, its kind,
   // and a lower-cased "haystack" string the text search matches against.
   var INST = [];
@@ -301,13 +312,126 @@
     });
   }
 
+  // ----------------------------------------------------- lectureship hosts
+  // Institutions that have hosted a colloquium in the series (read from the
+  // lecture content, embedded in the page as JSON). Each becomes a prominent,
+  // always-on pin: placed from the colloquium's explicit `coords` when given,
+  // otherwise by matching the institution name against the loaded datasets.
+
+  // Fold a name to a comparison key: lower-cased, punctuation flattened, a
+  // leading "the" dropped — so "The University of Alabama" meets "University of
+  // Alabama" and "Alabama A & M" meets "Alabama A and M".
+  function normName(s) {
+    return String(s == null ? "" : s)
+      .toLowerCase()
+      .replace(/&/g, " and ")
+      .replace(/[^a-z0-9]+/g, " ")
+      .replace(/^\s*the\s+/, "")
+      .trim();
+  }
+
+  function buildNameIndex(scholars, colleges) {
+    var idx = {};
+    // Colleges first, then scholars, so a scholar campus wins on a name collision
+    // (its record carries the scholar count; coordinates are effectively identical).
+    colleges.forEach(function (d) { var k = normName(d.name); if (k) { idx[k] = d; } });
+    scholars.forEach(function (d) { var k = normName(d.name); if (k) { idx[k] = d; } });
+    return idx;
+  }
+
+  function hostIcon() {
+    return L.divIcon({
+      className: "cs-host-pin",
+      html: "<svg viewBox='0 0 24 34' aria-hidden='true'>" +
+              "<path d='M12 .8A11.2 11.2 0 0 0 .8 12C.8 20.4 12 33.2 12 33.2S23.2 20.4 23.2 12A11.2 11.2 0 0 0 12 .8z'/>" +
+              "<circle cx='12' cy='12' r='4.3'/></svg>",
+      iconSize: [28, 38], iconAnchor: [14, 35], popupAnchor: [0, -31]
+    });
+  }
+
+  function hostPopup(g) {
+    var visits = g.visits.map(function (v) {
+      var who = esc(v.speaker || "Speaker TBA");
+      var head = v.url
+        ? "<a class='cs-pop-sch-name cs-pop-visit-link' href='" + esc(v.url) + "'>" + who + "</a>"
+        : "<span class='cs-pop-sch-name'>" + who + "</span>";
+      var talk = v.title ? " <span class='cs-pop-sch-meta'>— &ldquo;" + esc(v.title) + "&rdquo;</span>" : "";
+      var when = v.date ? "<span class='cs-pop-visit-date'>" + esc(v.date) + "</span>" : "";
+      return "<li>" + head + talk + when + "</li>";
+    }).join("");
+    var n = g.visits.length;
+    return "<div class='cs-pop'>" +
+      "<p class='cs-pop-name'>" + esc(g.name) + "</p>" +
+      (g.place ? "<p class='cs-pop-meta'>" + esc(g.place) + "</p>" : "") +
+      "<span class='cs-pop-tag cs-pop-tag-host'>" +
+        (n === 1 ? "Lectureship host" : n + " lectureship visits") + "</span>" +
+      "<ul class='cs-pop-scholars'>" + visits + "</ul>" +
+      "</div>";
+  }
+
+  function buildHosts(scholars, colleges) {
+    var el = document.getElementById("cs-hosts-data");
+    if (!el) { return; }
+    var rows;
+    try { rows = JSON.parse(el.textContent || "[]"); }
+    catch (e) { if (window.console) { console.error("[cs-map] host data", e); } return; }
+    if (!rows.length) { return; }
+    hostStats.total = rows.length;
+    nameIndex = nameIndex || buildNameIndex(scholars, colleges);
+
+    // One pin per institution; group every visit hosted there under it.
+    var groups = {}, order = [];
+    rows.forEach(function (r) {
+      var key = normName(r.institution);
+      if (!key) { return; }
+      var g = groups[key];
+      if (!g) {
+        var lat = (typeof r.lat === "number") ? r.lat : null;
+        var lon = (typeof r.lon === "number") ? r.lon : null;
+        var place = "", display = r.institution;
+        var match = nameIndex[key];
+        if (match) {
+          if (lat === null || lon === null) { lat = match.lat; lon = match.lon; }
+          place = [match.city, match.state].filter(Boolean).join(", ");
+          display = match.name;     // prefer the dataset's official spelling
+        }
+        g = groups[key] = { name: display, place: place, lat: lat, lon: lon, visits: [] };
+        order.push(key);
+      }
+      g.visits.push(r);
+    });
+
+    order.forEach(function (key) {
+      var g = groups[key];
+      if (typeof g.lat !== "number" || typeof g.lon !== "number") {
+        hostStats.unplaced.push(g.name);
+        return;
+      }
+      var m = L.marker([g.lat, g.lon], {
+        pane: "cs-host", icon: hostIcon(), riseOnHover: true,
+        title: g.name + " — lectureship host"
+      });
+      m.bindPopup(hostPopup(g), { closeButton: true, maxWidth: 300, minWidth: 220, autoPanPadding: [24, 24] });
+      hostMarkers.push(m);
+      hostGroup.addLayer(m);
+      hostStats.placed++;
+    });
+
+    if (hostStats.placed) { map.addLayer(hostGroup); }
+    if (hostStats.unplaced.length && window.console) {
+      console.warn("[cs-map] Lectureship host(s) not shown — add `coords: [lat, lon]` " +
+        "to the colloquium, or match the institution name to the map data: " +
+        hostStats.unplaced.join("; "));
+    }
+  }
+
   // --------------------------------------------------------- filter state
   var state = {
     q: "",
     radiusOn: false,
     center: null,        // L.LatLng
     radiusMi: 100,
-    layerOn: { scholar: true, college: true },
+    layerOn: { host: true, scholar: true, college: true },
     types: {},           // bucket -> true; empty object == no type filter
     sizes: {},           // "S"/"M"/"L" -> true; empty object == no size filter
     showAll: false       // results list: show every hit vs. just the nearest few
@@ -364,6 +488,9 @@
   // ------------------------------------------------------------ legend
   var legendCount = {};   // kind -> count <span>
   function updateCounts() {
+    if (legendCount.host) {
+      setCount(legendCount.host, hostStats.placed, hostStats.placed);
+    }
     if (legendCount.scholar) {
       setCount(legendCount.scholar, lastVis.scholar.length, totals.scholar);
     }
@@ -384,11 +511,20 @@
     var ctl = L.control({ position: "topright" });
     ctl.onAdd = function () {
       var div = L.DomUtil.create("div", "cs-control cs-legend");
+      // The host row only appears when at least one lectureship host is on the map.
+      var hostRow = hostStats.placed
+        ? "<label class='cs-legend-row' data-layer='host'>" +
+            "<input type='checkbox' checked>" +
+            "<span class='cs-swatch cs-swatch-host'></span>" +
+            "<span class='cs-legend-label'>Lectureship host</span>" +
+            "<span class='cs-legend-count' data-count='host'></span></label>"
+        : "";
       div.innerHTML =
         "<button class='cs-legend-toggle' type='button' aria-expanded='true'>" +
           "<span class='cs-legend-title'>Legend</span>" +
           "<span class='cs-legend-chev' aria-hidden='true'></span></button>" +
         "<div class='cs-legend-body'>" +
+        hostRow +
         "<label class='cs-legend-row' data-layer='scholar'>" +
           "<input type='checkbox' checked>" +
           "<span class='cs-swatch cs-swatch-scholar'></span>" +
@@ -405,6 +541,7 @@
       L.DomEvent.disableClickPropagation(div);
       L.DomEvent.disableScrollPropagation(div);
 
+      legendCount.host = div.querySelector("[data-count='host']");
       legendCount.scholar = div.querySelector("[data-count='scholar']");
       legendCount.college = div.querySelector("[data-count='college']");
 
@@ -424,7 +561,8 @@
         var box = row.querySelector("input");
         box.addEventListener("change", function () {
           state.layerOn[which] = box.checked;
-          var group = which === "scholar" ? scholarGroup : collegeGroup;
+          var group = which === "scholar" ? scholarGroup
+                    : which === "host" ? hostGroup : collegeGroup;
           if (box.checked) { map.addLayer(group); row.classList.remove("is-off"); }
           else { map.removeLayer(group); row.classList.add("is-off"); }
           renderResults();
@@ -880,12 +1018,14 @@
     lastVis.scholar = INST.filter(function (r) { return r.kind === "scholar"; });
     lastVis.college = INST.filter(function (r) { return r.kind === "college"; });
 
+    buildHosts(scholars, colleges);
     buildToolbar();
     legend();
 
     // Debug/smoke-test hook.
     window.__cs = {
       map: map, scholarGroup: scholarGroup, collegeGroup: collegeGroup,
+      hostGroup: hostGroup, hostStats: hostStats,
       state: state, applyFilters: applyFilters, setCenter: setCenter,
       enableRadius: enableRadius, lastVis: lastVis, INST: INST, els: els
     };
@@ -894,6 +1034,10 @@
       fmt(scholars.length) + " Cottrell Scholar institutions",
       fmt(colleges.length) + " other colleges & universities"
     ];
+    if (hostStats.placed) {
+      parts.unshift(fmt(hostStats.placed) + " lectureship host " +
+        (hostStats.placed === 1 ? "institution" : "institutions"));
+    }
     var tail = [];
     if (meta && meta.year_min) { tail.push("Scholars " + meta.year_min + "–" + meta.year_max); }
     tail.push("Data: RCSA, IPEDS (US Dept. of Education), OpenStreetMap");
