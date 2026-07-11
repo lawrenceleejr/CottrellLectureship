@@ -1,8 +1,8 @@
 ---
 title: "Home"
 # The masthead headline and the italic deck beneath it. Edit freely.
-headline: "Scientific leaders, brought to neighboring campuses."
-deck: "A distinguished lectureship that brings leading teacher-scholars to paired institutions across the United States and Canada."
+headline: "Bringing scientific leaders to campuses across North America."
+deck: "A distinguished lectureship that pairs neighboring departments to co-host a visiting teacher-scholar — and build a lasting connection."
 # OPTIONAL photograph beside the masthead. Drop an image in static/images/ and set the
 # path here; the hero switches to a two-column layout automatically. Leave commented for
 # a pure-type masthead.
