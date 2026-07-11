@@ -1,6 +1,6 @@
 {{ define "main" }}
   {{ if .Params.speaker }}
-    {{/* A pairing page: the co-equal boxes, plus any speaker bio from the body. */}}
+    {{/* A pairing page: the equal boxes, plus any speaker bio from the body. */}}
     <article class="single">
       {{ partial "pairing-card.html" (dict "page" . "level" 1) }}
       {{ if .Content }}

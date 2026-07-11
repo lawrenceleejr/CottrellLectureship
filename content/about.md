@@ -7,7 +7,7 @@ description: "How the Cottrell Collaborative Lectureship Series pairs scholars a
 
 The **Cottrell Collaborative Lectureship Series** pairs [Cottrell
 Scholars](https://rescorp.org/cottrell-scholars) so that one hosts the other for a
-colloquium — and the visiting scholar then gives a **second, co-equal colloquium at a
+colloquium — and the visiting scholar then gives a **second, equal colloquium at a
 neighboring institution**. One trip, two talks, two audiences: the science reaches a
 research university and a nearby college in the same visit, and new collaborations form
 across campuses that rarely share a speaker.
@@ -31,7 +31,7 @@ astronomy who excel as both researchers and educators.
 
 1. **Two paired scholars.** A host Cottrell Scholar invites a colleague to their campus.
 2. **Colloquium one.** The visitor gives a colloquium at the host's institution.
-3. **Colloquium two.** On the same visit, the visitor gives a co-equal colloquium at a
+3. **Colloquium two.** On the same visit, the visitor gives an equal colloquium at a
    neighboring institution, hosted by a scholar there.
 4. **Both are colloquia** — neither is a "bonus" talk. The two boxes are shown as equals.
 

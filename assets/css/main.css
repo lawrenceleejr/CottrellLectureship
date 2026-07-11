@@ -181,7 +181,7 @@ img { max-width: 100%; height: auto; display: block; }
 .speaker-aff { color: var(--ink); }
 .speaker-field::before { content: "·"; margin-right: .6rem; color: var(--border-strong); }
 
-/* the co-equal, linked pair */
+/* the equal, linked pair */
 .pair { display: flex; align-items: stretch; gap: var(--sp-3); }
 .pair-link { flex: 0 0 auto; align-self: center; display: grid; place-items: center; }
 .pair-link-glyph {
@@ -191,7 +191,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .pair-link-glyph svg { display: block; width: 1.15rem; height: 1.15rem; }
 
-/* one colloquium box — co-equal (flex:1 1 0) */
+/* one colloquium box — equal (flex:1 1 0) */
 .colloq {
   flex: 1 1 0; min-width: 0;
   display: flex; flex-direction: column;

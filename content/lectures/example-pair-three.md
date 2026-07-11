@@ -35,7 +35,7 @@ colloquia:
     location: "Founders Hall Auditorium"
     link: ""
     abstract: |
-      Placeholder abstract for the co-equal colloquium at the neighboring institution.
+      Placeholder abstract for the paired colloquium at the neighboring institution.
 ---
 
 *Placeholder bio.* Dr. Ada Fontaine leads a materials-by-design group at Northern

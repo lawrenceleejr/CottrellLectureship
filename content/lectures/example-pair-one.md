@@ -9,7 +9,7 @@ speaker:                    # exactly one speaker per pair (gives both colloquia
   field: "Physical Chemistry"
   photo: "/images/placeholder-portrait.svg"   # OPTIONAL — delete this line to show an initials monogram instead
   website: "https://example.edu/rivera"
-colloquia:                  # the two co-equal, linked boxes (both colloquia)
+colloquia:                  # the two equal, linked boxes (both colloquia)
   - kind: "Colloquium"
     institution: "State University"
     host:
@@ -37,7 +37,7 @@ colloquia:                  # the two co-equal, linked boxes (both colloquia)
     link: ""
     abstract: |
       Placeholder abstract for the paired colloquium at the neighboring institution —
-      the same speaker, a co-equal talk, a second audience of undergraduates and faculty.
+      the same speaker, an equal talk, a second audience of undergraduates and faculty.
 ---
 
 *Placeholder bio.* Dr. Jane Rivera studies ultrafast chemical dynamics at the University

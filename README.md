@@ -3,7 +3,7 @@
 A [Hugo](https://gohugo.io) website advertising a lectureship series funded by the
 **Research Corporation for Science Advancement (RCSA)** as part of the **Cottrell Scholar
 Collaborative**. The series pairs Cottrell Scholars: one hosts the other for a colloquium,
-and the visiting scholar gives a **second, co-equal colloquium at a neighboring
+and the visiting scholar gives a **second, equal colloquium at a neighboring
 institution**. Each visit is shown as **two linked boxes** — one per colloquium, each with
 its host.
 
@@ -26,7 +26,7 @@ speaker:                    # exactly one speaker per pair
   field: "Physical Chemistry"
   photo: "/images/rivera.jpg"   # OPTIONAL — omit for an initials monogram
   website: "https://example.edu/rivera"
-colloquia:                  # the two co-equal, linked boxes (both colloquia)
+colloquia:                  # the two equal, linked boxes (both colloquia)
   - kind: "Colloquium"
     institution: "State University"
     host: { name: "Dr. Alex Chen", role: "Cottrell Scholar 2019", affiliation: "State University" }

@@ -35,7 +35,7 @@ colloquia:
     location: "Whitfield Hall, Room 210"
     link: ""
     abstract: |
-      Placeholder abstract for the co-equal colloquium at the neighboring campus,
+      Placeholder abstract for the paired colloquium at the neighboring campus,
       pitched for a college audience.
 ---
 
