@@ -342,8 +342,8 @@ img { max-width: 100%; height: auto; display: block; }
 .dropcap::first-letter,
 .dropcap > p:first-of-type::first-letter,
 .bio > p:first-of-type::first-letter {
-  float: left; font-weight: 700; color: var(--accent-2);
-  font-size: 3.6em; line-height: .74; padding: .02em .12em 0 0;
+  float: left; font-weight: 760; color: var(--accent-2);
+  font-size: 5.2em; line-height: .68; padding: .03em .1em 0 0;
   font-optical-sizing: auto; font-style: normal;
 }
 

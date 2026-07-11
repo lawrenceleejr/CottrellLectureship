@@ -1,16 +1,16 @@
 ---
 title: "Home"
-# The masthead headline and italic deck. Edit freely.
-headline: "Two talks. Two campuses. One trip."
-deck: "A research university and the small college down the road rarely share a speaker. This series changes that."
+# The masthead headline and the italic deck beneath it. Edit freely.
+headline: "Scientific leaders, brought to neighboring campuses."
+deck: "A distinguished lectureship that brings leading teacher-scholars to paired institutions across the United States and Canada."
 # OPTIONAL photograph beside the masthead. Drop an image in static/images/ and set the
 # path here; the hero switches to a two-column layout automatically. Leave commented for
 # a pure-type masthead.
 # heroImage: "/images/hero.jpg"
-# heroImageAlt: "A visiting speaker at the lectern during a colloquium."
+# heroImageAlt: "A visiting teacher-scholar at the lectern during a colloquium."
 # heroImageCredit: "Photo: Your Name"
 ---
-The Cottrell Lectureship Series sends one teacher-scholar into a region to speak twice in a
-single visit — once for a Cottrell Scholar, once for a regional partner nearby. Two
-audiences that would rarely otherwise meet, and two departments that keep talking long
-after the visitor has flown home.
+Each visit brings a distinguished teacher-scholar to a region to speak at two neighboring
+institutions in a single trip — one hosted by a Cottrell Scholar, the other by a partnering
+department nearby. Two communities share in exceptional science, and two institutions that
+seldom cross paths begin a lasting connection.

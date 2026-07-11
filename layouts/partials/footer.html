@@ -8,11 +8,11 @@
       <strong>{{ site.Title }}</strong>
     </p>
     <p class="footer-credit">
-      One teacher-scholar, two talks, one region — funded by {{ site.Params.funder }}
-      as a {{ site.Params.program }}.
+      A {{ site.Params.program }}, supported by {{ site.Params.funder }} — connecting
+      departments across the United States and Canada.
     </p>
     {{ with site.Params.contactEmail }}
-      <p class="footer-contact">Hosting or attending? <a href="mailto:{{ . }}">{{ . }}</a></p>
+      <p class="footer-contact">Interested in hosting a visit? <a href="mailto:{{ . }}">{{ . }}</a></p>
     {{ end }}
     <p class="footer-meta">© {{ now.Year }} {{ site.Title }}</p>
   </div>
