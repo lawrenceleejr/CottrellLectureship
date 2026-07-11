@@ -138,29 +138,197 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: var(--shadow);
-  padding: .7rem .8rem;
   backdrop-filter: saturate(1.2) blur(6px);
   max-width: 240px;
 }
-.cs-legend-title {
-  font-weight: 600; font-size: var(--f-1); letter-spacing: .02em;
-  margin: 0 0 .5rem;
+.cs-legend { padding: .35rem; }
+.cs-legend-toggle {
+  display: flex; align-items: center; justify-content: space-between; gap: .5rem;
+  width: 100%; border: 0; background: transparent; cursor: pointer;
+  color: inherit; font: inherit; padding: .35rem .45rem; border-radius: 9px;
 }
+.cs-legend-toggle:hover { background: color-mix(in srgb, var(--map-panel-ink) 6%, transparent); }
+.cs-legend-title {
+  font-weight: 600; font-size: var(--f-1); letter-spacing: .02em; margin: 0;
+}
+.cs-legend-chev {
+  width: 9px; height: 9px; flex: none; border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor; transform: rotate(45deg);
+  transition: transform .15s ease; opacity: .6; margin-bottom: 2px;
+}
+.cs-legend.is-collapsed .cs-legend-chev { transform: rotate(-45deg); margin-bottom: -2px; }
+.cs-legend-body { padding: .2rem .45rem .35rem; }
+.cs-legend.is-collapsed .cs-legend-body { display: none; }
 .cs-legend-row {
   display: flex; align-items: center; gap: .5rem;
   font-size: var(--f-1); margin-bottom: .35rem; cursor: pointer;
-  user-select: none;
+  user-select: none; min-height: 28px;
 }
-.cs-legend-row:last-child { margin-bottom: 0; }
-.cs-legend-row input { margin: 0; accent-color: var(--dot-scholar); flex: none; }
+.cs-legend-label { flex: 1 1 auto; line-height: 1.2; }
+.cs-legend-row:last-of-type { margin-bottom: 0; }
+.cs-legend-row input { margin: 0; accent-color: var(--dot-scholar); flex: none; width: 16px; height: 16px; }
 .cs-legend-row.is-off { opacity: .45; }
 .cs-swatch { width: 14px; height: 14px; border-radius: 50%; flex: none; }
 .cs-swatch-scholar { background: var(--dot-scholar); border: 2px solid var(--dot-scholar-ring); }
 .cs-swatch-college { background: var(--dot-college); border: 2px solid var(--dot-college-ring); }
-.cs-legend-count { color: var(--muted); font-variant-numeric: tabular-nums; }
-.cs-legend-hint { color: var(--muted); font-size: 11px; margin: .5rem 0 0; }
+.cs-legend-count { color: var(--map-panel-ink); font-variant-numeric: tabular-nums; font-weight: 600; }
+.cs-legend-total { color: var(--muted); font-weight: 400; }
+.cs-legend-hint { color: var(--muted); font-size: 11px; margin: .5rem 0 0; line-height: 1.35; }
 
 @media (max-width: 640px) {
-  .cs-control { max-width: 180px; padding: .55rem .6rem; }
+  .cs-control { max-width: 200px; }
   .cs-legend-hint { display: none; }
 }
+
+/* ==========================================================================
+   Filter toolbar — sits above the map so it never covers it (key on mobile).
+   ========================================================================== */
+.map-toolbar {
+  margin-bottom: var(--sp-3);
+  display: none;                    /* revealed by JS once wired up */
+}
+.map-toolbar.is-ready { display: block; }
+/* Explicit display rules below would otherwise defeat the [hidden] attribute. */
+.map-toolbar [hidden] { display: none !important; }
+
+.mt-row { display: flex; gap: var(--sp-2); align-items: stretch; }
+
+.mt-search {
+  position: relative; flex: 1 1 auto; display: flex; align-items: center;
+}
+.mt-search-ic {
+  position: absolute; left: .7rem; width: 18px; height: 18px;
+  color: var(--muted); pointer-events: none;
+}
+.mt-input {
+  width: 100%; font-family: var(--font-serif); font-size: var(--f0);
+  color: var(--ink); background: var(--surface);
+  border: 1px solid var(--border-strong); border-radius: 10px;
+  padding: .6rem .6rem .6rem 2.3rem; min-height: 44px;
+  -webkit-appearance: none; appearance: none;
+}
+.mt-input::placeholder { color: var(--muted); }
+.mt-input:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 1px; border-color: var(--accent); }
+.mt-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.mt-clear {
+  position: absolute; right: .35rem; top: 50%; transform: translateY(-50%);
+  width: 32px; height: 32px; border: 0; border-radius: 50%; cursor: pointer;
+  background: transparent; color: var(--muted); font-size: 1.35rem; line-height: 1;
+  display: grid; place-items: center;
+}
+.mt-clear:hover { background: var(--surface-2); color: var(--ink); }
+
+.mt-radius-btn {
+  flex: none; display: inline-flex; align-items: center; gap: .45rem;
+  font-family: var(--font-serif); font-weight: 600; font-size: var(--f0);
+  color: var(--ink); background: var(--surface);
+  border: 1px solid var(--border-strong); border-radius: 10px;
+  padding: .5rem .9rem; min-height: 44px; cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.mt-radius-btn:hover { background: var(--surface-2); }
+.mt-radius-ic {
+  width: 15px; height: 15px; flex: none; border-radius: 50%;
+  border: 2px solid currentColor; position: relative;
+}
+.mt-radius-ic::after {
+  content: ""; position: absolute; inset: 0; margin: auto;
+  width: 4px; height: 4px; border-radius: 50%; background: currentColor;
+}
+.mt-radius-btn.is-on {
+  background: var(--accent); color: var(--btn-ink); border-color: transparent;
+}
+
+.mt-search-meta {
+  margin: .5rem .2rem 0; font-size: var(--f-1); color: var(--muted);
+  display: flex; align-items: center; gap: .6rem;
+}
+.mt-fit {
+  font-family: var(--font-serif); font-size: var(--f-1); font-weight: 600;
+  color: var(--accent-ink); background: transparent; border: 0; cursor: pointer;
+  padding: .15rem .3rem; text-decoration: underline; text-underline-offset: 2px;
+}
+.mt-fit:hover { color: var(--accent-2); }
+
+/* -------------------------------------------------------- radius panel */
+.mt-radius-panel {
+  margin-top: var(--sp-3); padding: var(--sp-3);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.mt-center-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.mt-center-row button {
+  font-family: var(--font-serif); font-size: var(--f-1); color: var(--ink);
+  background: var(--paper); border: 1px solid var(--border-strong);
+  border-radius: 999px; padding: .45rem .8rem; min-height: 38px; cursor: pointer;
+}
+.mt-center-row button:hover { background: var(--surface-2); }
+.mt-setcenter.is-active {
+  background: var(--accent); color: var(--btn-ink); border-color: transparent;
+}
+.mt-geoloc.is-busy { opacity: .7; cursor: progress; }
+
+.mt-slider { display: block; margin-top: var(--sp-3); }
+.mt-slider-label { display: block; font-size: var(--f-1); color: var(--muted); margin-bottom: .3rem; }
+.mt-slider-label strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+.mt-range {
+  width: 100%; accent-color: var(--accent); height: 28px; cursor: pointer;
+}
+.mt-geoerr { margin: .6rem 0 0; font-size: var(--f-1); color: var(--dot-scholar); }
+
+/* -------------------------------------------------------- results list */
+.mt-results { margin-top: var(--sp-3); border-top: 1px solid var(--border); padding-top: var(--sp-3); }
+.mt-results-head { margin: 0 0 .5rem; font-size: var(--f-1); font-weight: 600; color: var(--ink); }
+.mt-results-list {
+  list-style: none; margin: 0; padding: 0;
+  max-height: 320px; overflow-y: auto; -webkit-overflow-scrolling: touch;
+}
+.cs-res-item {
+  display: flex; align-items: center; gap: .6rem; width: 100%; text-align: left;
+  font-family: var(--font-serif); background: transparent; border: 0;
+  border-radius: 8px; padding: .5rem .4rem; cursor: pointer; color: var(--ink);
+}
+.cs-res-item:hover { background: var(--surface-2); }
+.cs-res-dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.cs-res-dot-scholar { background: var(--dot-scholar); border: 2px solid var(--dot-scholar-ring); }
+.cs-res-dot-college { background: var(--dot-college); border: 2px solid var(--dot-college-ring); }
+.cs-res-text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.cs-res-name {
+  font-size: var(--f0); font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cs-res-sub {
+  font-size: var(--f-1); color: var(--muted);
+  display: flex; align-items: center; gap: .5rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cs-res-badge {
+  flex: none; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 999px;
+  background: color-mix(in srgb, var(--dot-scholar) 16%, transparent);
+  color: var(--dot-scholar);
+  border: 1px solid color-mix(in srgb, var(--dot-scholar) 40%, transparent);
+}
+.cs-res-dist {
+  flex: none; font-size: var(--f-1); font-weight: 600; color: var(--accent-ink);
+  font-variant-numeric: tabular-nums;
+}
+.cs-res-more { list-style: none; padding: .5rem .4rem 0; font-size: var(--f-1); color: var(--muted); font-style: italic; }
+
+.mt-hint {
+  margin: var(--sp-2) 0 0; font-size: var(--f-1); color: var(--accent-ink);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: 8px; padding: .5rem .7rem;
+}
+
+/* The draggable radius-centre pin. */
+.cs-center-icon { background: none; border: 0; }
+.cs-center-icon span {
+  display: block; width: 20px; height: 20px; margin: 4px;
+  border-radius: 50%; border: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 22%, var(--map-panel));
+  box-shadow: 0 0 0 2px var(--map-panel), 0 2px 6px rgba(0,0,0,.35);
+  cursor: grab;
+}
+.cs-center-icon span:active { cursor: grabbing; }
+.leaflet-container.cs-picking { cursor: crosshair; }
