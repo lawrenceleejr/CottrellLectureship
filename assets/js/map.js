@@ -28,17 +28,63 @@
     maxZoom: 18
   };
 
-  // Friendly labels for RCSA's institution-type codes.
+  // Friendly labels for the institution-type codes (RCSA's own labels for scholar
+  // campuses; Carnegie-derived codes for every other college — same vocabulary).
   var TYPE_LABEL = {
     "R1": "R1 doctoral university — very high research",
     "R2": "R2 doctoral university — high research",
     "R3": "R3 doctoral / professional university",
-    "PUI": "Primarily undergraduate institution",
     "Comp": "Master's / comprehensive university",
-    "2 yr": "Two-year college",
+    "PUI": "Primarily undergraduate institution",
+    "2 yr": "Two-year / associate's college",
+    "Special": "Special-focus institution",
     "Foreign": "University (Canada)",
     "Research inst. / observatory": "Research institute / observatory"
   };
+
+  // Every raw type collapses to one of these filter buckets. Anything that isn't
+  // a recognised standalone bucket (special-focus, research institutes, the few
+  // unclassified campuses) folds into "Special".
+  function typeBucket(t) {
+    switch (t) {
+      case "R1": case "R2": case "R3":
+      case "Comp": case "PUI": case "2 yr": case "Foreign":
+        return t;
+      default:
+        return "Special";
+    }
+  }
+
+  // Institution-type filter chips, in display order. `key` is the bucket above.
+  var TYPE_FILTERS = [
+    { key: "R1",      label: "R1",              title: "R1 — very high research" },
+    { key: "R2",      label: "R2",              title: "R2 — high research" },
+    { key: "R3",      label: "R3",              title: "R3 — doctoral / professional" },
+    { key: "Comp",    label: "Master's",        title: "Master's / comprehensive" },
+    { key: "PUI",     label: "PUI",             title: "Primarily undergraduate" },
+    { key: "2 yr",    label: "Two-year",        title: "Two-year / associate's" },
+    { key: "Special", label: "Special / other", title: "Special-focus, research institutes, unclassified" },
+    { key: "Foreign", label: "Canada",          title: "Canadian universities" }
+  ];
+
+  // Enrollment size: IPEDS band (1–5) -> human label (shown in popups) …
+  var SIZE_LABEL = {
+    1: "Under 1,000 students", 2: "1,000–4,999 students",
+    3: "5,000–9,999 students", 4: "10,000–19,999 students",
+    5: "20,000 or more students"
+  };
+  // … and the coarser Small/Medium/Large buckets used by the filter chips.
+  var SIZE_FILTERS = [
+    { key: "S", label: "Small",  hint: "< 5,000" },
+    { key: "M", label: "Medium", hint: "5,000–19,999" },
+    { key: "L", label: "Large",  hint: "20,000+" }
+  ];
+  function sizeBucket(sz) {
+    if (sz === 1 || sz === 2) { return "S"; }
+    if (sz === 3 || sz === 4) { return "M"; }
+    if (sz === 5) { return "L"; }
+    return null;   // not reported (Canada, standalone institutes, a few US)
+  }
 
   var mapEl = document.getElementById("cs-map");
   if (!mapEl || typeof L === "undefined") { return; }
@@ -153,26 +199,37 @@
   }
 
   // ------------------------------------------------------------ popups
+  // The institution's classification line: type ("R1 doctoral university…") and,
+  // where known, enrollment size — each shown only when present.
+  function classBits(d) {
+    var bits = [];
+    var t = TYPE_LABEL[d.type] || d.type;
+    if (t) { bits.push(t); }
+    if (d.size && SIZE_LABEL[d.size]) { bits.push(SIZE_LABEL[d.size]); }
+    return bits;
+  }
   function scholarPopup(d) {
     var list = d.scholars.map(function (s) {
       var meta = [s.year, s.discipline].filter(Boolean).join(" · ");
       return "<li><span class='cs-pop-sch-name'>" + esc(s.name) + "</span>" +
              (meta ? " <span class='cs-pop-sch-meta'>— " + esc(meta) + "</span>" : "") + "</li>";
     }).join("");
-    var type = TYPE_LABEL[d.type] || d.type || "";
+    var cls = classBits(d);
     var n = d.count;
     return "<div class='cs-pop'>" +
       "<p class='cs-pop-name'>" + esc(d.name) + "</p>" +
-      (place(d) ? "<p class='cs-pop-meta'>" + esc(place(d)) + (type ? " · " + esc(type) : "") + "</p>"
-                : (type ? "<p class='cs-pop-meta'>" + esc(type) + "</p>" : "")) +
+      (place(d) ? "<p class='cs-pop-meta'>" + esc(place(d)) + "</p>" : "") +
+      (cls.length ? "<p class='cs-pop-meta cs-pop-class'>" + esc(cls.join(" · ")) + "</p>" : "") +
       "<span class='cs-pop-tag'>" + n + " Cottrell Scholar" + (n === 1 ? "" : "s") + "</span>" +
       "<ul class='cs-pop-scholars'>" + list + "</ul>" +
       "</div>";
   }
   function collegePopup(d) {
+    var cls = classBits(d);
     return "<div class='cs-pop'>" +
       "<p class='cs-pop-name'>" + esc(d.name) + "</p>" +
       (place(d) ? "<p class='cs-pop-meta'>" + esc(place(d)) + "</p>" : "") +
+      (cls.length ? "<p class='cs-pop-meta cs-pop-class'>" + esc(cls.join(" · ")) + "</p>" : "") +
       "<p class='cs-pop-empty'>No Cottrell Scholar yet — a potential partner institution.</p>" +
       "</div>";
   }
@@ -203,7 +260,7 @@
   var scholarMarkers = [];
 
   function haystack(d, kind, extra) {
-    var parts = [d.name, d.city, d.state, d.country];
+    var parts = [d.name, d.city, d.state, d.country, d.type];
     if (extra) { parts = parts.concat(extra); }
     return parts.filter(Boolean).join(" ").toLowerCase();
   }
@@ -220,7 +277,8 @@
       m.bindPopup(collegePopup(d), { closeButton: true, maxWidth: 280, autoPanPadding: [24, 24] });
       collegeMarkers.push(m);
       INST.push({ data: d, marker: m, kind: "college", lat: d.lat, lon: d.lon,
-                  hay: haystack(d, "college"), dist: null });
+                  hay: haystack(d, "college"), tb: typeBucket(d.type),
+                  sb: sizeBucket(d.size), dist: null });
     });
   }
   function addScholars(rows) {
@@ -238,7 +296,8 @@
         return [s.name, s.year, s.discipline].filter(Boolean).join(" ");
       });
       INST.push({ data: d, marker: m, kind: "scholar", lat: d.lat, lon: d.lon,
-                  hay: haystack(d, "scholar", extra), dist: null });
+                  hay: haystack(d, "scholar", extra), tb: typeBucket(d.type),
+                  sb: sizeBucket(d.size), dist: null });
     });
   }
 
@@ -248,13 +307,28 @@
     radiusOn: false,
     center: null,        // L.LatLng
     radiusMi: 100,
-    layerOn: { scholar: true, college: true }
+    layerOn: { scholar: true, college: true },
+    types: {},           // bucket -> true; empty object == no type filter
+    sizes: {},           // "S"/"M"/"L" -> true; empty object == no size filter
+    showAll: false       // results list: show every hit vs. just the nearest few
   };
   var lastVis = { scholar: [], college: [] };  // cached results of last apply
   var totals = { scholar: 0, college: 0 };
 
+  function anyOn(obj) {
+    for (var k in obj) { if (obj[k]) { return true; } }
+    return false;
+  }
+  function countOn(obj) {
+    var n = 0;
+    for (var k in obj) { if (obj[k]) { n++; } }
+    return n;
+  }
+
   function passes(rec) {
     if (state.q && rec.hay.indexOf(state.q) === -1) { return false; }
+    if (anyOn(state.types) && !state.types[rec.tb]) { return false; }
+    if (anyOn(state.sizes) && (!rec.sb || !state.sizes[rec.sb])) { return false; }
     if (state.radiusOn && state.center) {
       rec.dist = haversineMi(state.center.lat, state.center.lng, rec.lat, rec.lon);
       if (rec.dist > state.radiusMi) { return false; }
@@ -283,7 +357,7 @@
     rebuildGroup(collegeGroup, col);
     updateCounts();
     renderResults();
-    updateSearchMeta();
+    updateFilterMeta();
   }
   var applyFiltersDebounced = debounce(applyFilters, 150);
 
@@ -417,6 +491,7 @@
   }
   function disableRadius() {
     state.radiusOn = false;
+    state.showAll = false;
     stopAwaitCenter();
     clearOverlay();
     applyFilters();
@@ -442,6 +517,9 @@
   });
 
   // ----------------------------------------------------- results list
+  var RESULTS_INITIAL = 10;    // nearest few shown by default …
+  var RESULTS_CAP = 500;       // … up to this many once the user expands the list
+
   function renderResults() {
     if (!els.results) { return; }
     if (!state.radiusOn || !state.center) {
@@ -456,7 +534,9 @@
     pool.sort(function (a, b) { return a.dist - b.dist; });
 
     var total = pool.length;
-    var shown = pool.slice(0, 10);
+    var limit = state.showAll ? Math.min(total, RESULTS_CAP) : Math.min(total, RESULTS_INITIAL);
+    var shown = pool.slice(0, limit);
+    renderResults._shown = shown;     // read by the delegated click handler
     var km = Math.round(state.radiusMi * 1.60934);
     els.resultsHead.textContent = total === 0
       ? "No institutions within " + state.radiusMi + " mi"
@@ -478,26 +558,30 @@
         "<span class='cs-res-dist'>" + rec.dist.toFixed(rec.dist < 10 ? 1 : 0) + " mi</span>" +
         "</button></li>";
     }).join("");
-    if (total > shown.length) {
-      html += "<li class='cs-res-more'>+ " + fmt(total - shown.length) + " more</li>";
+
+    // The tail that used to be a dead "+ N more" label is now a real control, so
+    // the institutions beyond the first handful are actually reachable.
+    if (!state.showAll && total > shown.length) {
+      html += "<li class='cs-res-more'><button type='button' class='cs-res-showall'>" +
+        "Show all " + fmt(total) + "</button></li>";
+    } else if (state.showAll && total > RESULTS_CAP) {
+      html += "<li class='cs-res-more cs-res-note'>Showing the nearest " + fmt(RESULTS_CAP) +
+        " of " + fmt(total) + " — narrow the radius or filters to see the rest.</li>";
+    } else if (state.showAll && total > RESULTS_INITIAL) {
+      html += "<li class='cs-res-more'><button type='button' class='cs-res-showall' " +
+        "data-collapse='1'>Show fewer</button></li>";
     }
     els.resultsList.innerHTML = html;
-
-    els.resultsList.querySelectorAll(".cs-res-item").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var rec = shown[+btn.getAttribute("data-idx")];
-        if (!rec) { return; }
-        var group = rec.kind === "scholar" ? scholarGroup : collegeGroup;
-        map.closePopup();
-        group.zoomToShowLayer(rec.marker, function () { rec.marker.openPopup(); });
-      });
-    });
   }
 
-  // ----------------------------------------------------- search meta line
-  function updateSearchMeta() {
+  // -------------------------------------------------- active-filter meta line
+  // Total match count + a "zoom to fit" affordance, shown whenever a search or a
+  // type/size filter is narrowing the map. Radius mode has its own distance-
+  // sorted list below, so we defer to that when it's on.
+  function updateFilterMeta() {
     if (!els.searchMeta) { return; }
-    if (!state.q) { els.searchMeta.hidden = true; return; }
+    var active = state.q || anyOn(state.types) || anyOn(state.sizes);
+    if (!active || state.radiusOn) { els.searchMeta.hidden = true; return; }
     var n = lastVis.scholar.length + lastVis.college.length;
     els.searchMeta.hidden = false;
     els.searchMetaText.textContent = fmt(n) + (n === 1 ? " match" : " matches");
@@ -530,11 +614,26 @@
             "aria-label='Search institutions, cities, and scholars'>" +
           "<button class='mt-clear' type='button' aria-label='Clear search' hidden>&times;</button>" +
         "</span>" +
+        "<button class='mt-filter-btn' type='button' aria-expanded='false'>" +
+          "<span class='mt-filter-ic' aria-hidden='true'></span>Filters" +
+          "<span class='mt-filter-count' hidden></span></button>" +
         "<button class='mt-radius-btn' type='button' aria-expanded='false'>" +
           "<span class='mt-radius-ic' aria-hidden='true'></span>Radius</button>" +
       "</div>" +
       "<p class='mt-search-meta' hidden><span class='mt-search-meta-text'></span>" +
         "<button type='button' class='mt-fit' hidden>Zoom to fit</button></p>" +
+      "<div class='mt-filter-panel' hidden>" +
+        "<div class='mt-group'>" +
+          "<p class='mt-group-label'>Institution type</p>" +
+          "<div class='mt-chips mt-type-chips'></div>" +
+        "</div>" +
+        "<div class='mt-group'>" +
+          "<p class='mt-group-label'>Size " +
+            "<span class='mt-group-note'>— total enrollment, US campuses</span></p>" +
+          "<div class='mt-chips mt-size-chips'></div>" +
+        "</div>" +
+        "<button type='button' class='mt-clearfilters' hidden>Clear filters</button>" +
+      "</div>" +
       "<div class='mt-radius-panel' hidden>" +
         "<div class='mt-center-row'>" +
           "<button class='mt-setcenter' type='button'>Tap the map to set centre</button>" +
@@ -558,6 +657,12 @@
 
     els.input      = bar.querySelector(".mt-input");
     els.clear      = bar.querySelector(".mt-clear");
+    els.filterBtn  = bar.querySelector(".mt-filter-btn");
+    els.filterCount= bar.querySelector(".mt-filter-count");
+    els.filterPanel= bar.querySelector(".mt-filter-panel");
+    els.typeChips  = bar.querySelector(".mt-type-chips");
+    els.sizeChips  = bar.querySelector(".mt-size-chips");
+    els.clearFilters = bar.querySelector(".mt-clearfilters");
     els.radiusBtn  = bar.querySelector(".mt-radius-btn");
     els.panel      = bar.querySelector(".mt-radius-panel");
     els.setCenter  = bar.querySelector(".mt-setcenter");
@@ -641,6 +746,83 @@
       els.dist.textContent = state.radiusMi + " mi";
       if (circle) { circle.setRadius(metersFromMi(state.radiusMi)); }
       applyFiltersDebounced();
+    });
+
+    // ---- type & size filter chips
+    function chipHTML(def) {
+      var hint = def.hint ? " <span class='mt-chip-hint'>" + esc(def.hint) + "</span>" : "";
+      var title = def.title ? " title='" + esc(def.title) + "'" : "";
+      return "<button type='button' class='mt-chip' aria-pressed='false' " +
+        "data-key='" + esc(def.key) + "'" + title + ">" + esc(def.label) + hint + "</button>";
+    }
+    els.typeChips.innerHTML = TYPE_FILTERS.map(chipHTML).join("");
+    els.sizeChips.innerHTML = SIZE_FILTERS.map(chipHTML).join("");
+
+    function toggleChip(chip, bag) {
+      var key = chip.getAttribute("data-key");
+      var on = !bag[key];
+      if (on) { bag[key] = true; } else { delete bag[key]; }
+      chip.setAttribute("aria-pressed", on ? "true" : "false");
+      chip.classList.toggle("is-on", on);
+      reflectFilters();
+      applyFilters();
+    }
+    els.typeChips.addEventListener("click", function (e) {
+      var chip = e.target.closest(".mt-chip");
+      if (chip) { toggleChip(chip, state.types); }
+    });
+    els.sizeChips.addEventListener("click", function (e) {
+      var chip = e.target.closest(".mt-chip");
+      if (chip) { toggleChip(chip, state.sizes); }
+    });
+
+    // Keep the "Clear filters" link, the toolbar button's active state, and its
+    // count badge in sync with how many chips are pressed.
+    function reflectFilters() {
+      var n = countOn(state.types) + countOn(state.sizes);
+      els.clearFilters.hidden = n === 0;
+      els.filterBtn.classList.toggle("is-on", n > 0);
+      els.filterCount.hidden = n === 0;
+      els.filterCount.textContent = n ? String(n) : "";
+    }
+
+    els.filterBtn.addEventListener("click", function () {
+      var open = els.filterPanel.hasAttribute("hidden");
+      if (open) {
+        els.filterPanel.removeAttribute("hidden");
+        els.filterBtn.setAttribute("aria-expanded", "true");
+      } else {
+        els.filterPanel.setAttribute("hidden", "");
+        els.filterBtn.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    els.clearFilters.addEventListener("click", function () {
+      state.types = {};
+      state.sizes = {};
+      els.filterPanel.querySelectorAll(".mt-chip").forEach(function (c) {
+        c.setAttribute("aria-pressed", "false");
+        c.classList.remove("is-on");
+      });
+      reflectFilters();
+      applyFilters();
+    });
+
+    // ---- results list (delegated: items + the "show all / fewer" control)
+    els.resultsList.addEventListener("click", function (e) {
+      var toggle = e.target.closest(".cs-res-showall");
+      if (toggle) {
+        state.showAll = !toggle.hasAttribute("data-collapse");
+        renderResults();
+        return;
+      }
+      var item = e.target.closest(".cs-res-item");
+      if (!item) { return; }
+      var rec = renderResults._shown && renderResults._shown[+item.getAttribute("data-idx")];
+      if (!rec) { return; }
+      var group = rec.kind === "scholar" ? scholarGroup : collegeGroup;
+      map.closePopup();
+      group.zoomToShowLayer(rec.marker, function () { rec.marker.openPopup(); });
     });
 
     bar.classList.add("is-ready");
