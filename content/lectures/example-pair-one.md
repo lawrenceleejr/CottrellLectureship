@@ -12,6 +12,8 @@ speaker:                    # exactly one speaker per pair (gives both colloquia
 colloquia:                  # the two linked talks (one per host)
   - kind: "Colloquium"
     institution: "State University"
+    coords: [40.00, -83.02]    # OPTIONAL — [lat, lon] for this host's map pin. Omit to
+                               # place the pin by matching the institution name to the map data.
     host:
       name: "Dr. Alex Chen"
       role: "Cottrell Scholar 2019"
@@ -27,6 +29,7 @@ colloquia:                  # the two linked talks (one per host)
       designing better catalysts.
   - kind: "Colloquium"
     institution: "Riverside Liberal Arts College"
+    coords: [39.76, -84.19]
     host:
       name: "Dr. Blair Okafor"
       role: "Cottrell Scholar 2020"

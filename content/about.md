@@ -9,8 +9,7 @@ The **Cottrell Lectureship Series** brings a **teacher-scholar** to a region to 
 talks** in a single visit — one hosted by a [Cottrell
 Scholar](https://rescorp.org/cottrell-scholars), the other by a regional partner at a
 nearby college or university. One trip, two talks, two audiences: exceptional science and
-teaching reach both campuses at once, and new connections form between institutions that
-rarely share a speaker.
+teaching reach both campuses at once, and new connections form between institutions.
 
 Each entry on this site is a **single visit**: the speaker appears in two linked boxes,
 one per talk, each showing the details and the local host.
@@ -40,6 +39,6 @@ researchers and educators.
 
 Interested in hosting a visit or bringing a teacher-scholar to your region? We especially
 encourage **reaching across campus lines** — pairing a research university with a nearby
-college, or two institutions that rarely share a speaker — to build lasting connections.
+college, or two institutions — to build lasting connections.
 Please [get in touch](mailto:cottrell-lectures@example.edu) — we would love to hear from
 you. *(Replace this address with your real contact.)*

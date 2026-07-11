@@ -10,6 +10,36 @@
 {{ end }}
 
 {{ define "main" }}
+  {{/* ---- Lectureship host institutions --------------------------------------
+       Every institution that has hosted a colloquium in this series, read straight
+       from the lecture content and handed to the map as JSON (see #cs-hosts-data
+       below). map.js draws a prominent pin for each — placed from an explicit
+       `coords: [lat, lon]` on the colloquium when given, otherwise by matching the
+       institution name against the colleges/scholars datasets. */}}
+  {{ $hosts := slice }}
+  {{ range (where site.RegularPages "Section" "lectures").ByDate.Reverse }}
+    {{ $url := .RelPermalink }}
+    {{ $spName := "" }}{{ $spField := "" }}
+    {{ with .Params.speaker }}{{ $spName = (or .name "") }}{{ $spField = (or .field "") }}{{ end }}
+    {{ range $i, $c := .Params.colloquia }}
+      {{ with $c.institution }}
+        {{ $hostName := "" }}
+        {{ with $c.host }}{{ $hostName = (or .name "") }}{{ end }}
+        {{ $when := "" }}
+        {{ with $c.date }}{{ $when = (time.AsTime .).Format "Jan 2, 2006" }}{{ end }}
+        {{ $rec := dict
+            "institution" .
+            "speaker" $spName "field" $spField
+            "title" (or $c.title "") "date" $when
+            "host" $hostName "url" $url }}
+        {{ with $c.coords }}
+          {{ $rec = merge $rec (dict "lat" (index . 0) "lon" (index . 1)) }}
+        {{ end }}
+        {{ $hosts = $hosts | append $rec }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
   <section class="page-head">
     <div class="wrap">
       <h1 class="page-title">{{ .Title }}</h1>
@@ -33,6 +63,10 @@
       </div>
       <p class="map-note" id="cs-map-note"></p>
     </div>
+    {{/* Host-institution data for map.js (drawn as prominent pins). safeJS keeps
+         Hugo from re-escaping the JSON as a quoted JS string; jsonify already
+         escapes <, > and & so the data can't break out of the script element. */}}
+    <script id="cs-hosts-data" type="application/json">{{ $hosts | jsonify | safeJS }}</script>
   </section>
 
   {{/* Data URLs are read from the #cs-map element's data-* attributes (see map.js). */}}
