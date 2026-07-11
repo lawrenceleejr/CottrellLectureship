@@ -357,6 +357,10 @@ img { max-width: 100%; height: auto; display: block; }
 .pullquote cite, .prose blockquote cite { display: block; margin-top: var(--sp-2); font-size: var(--f-1); font-style: normal; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
 
 .single .bio { margin-top: var(--sp-6); }
+.bio-link { margin-top: var(--sp-4); }
+.single .bio + .bio-link { margin-top: var(--sp-4); }
+.bio-link a { font-weight: 600; text-decoration: none; }
+.bio-link a:hover { text-decoration: underline; }
 .single .back, .page .wrap { margin-top: var(--sp-5); }
 .back a { font-weight: 600; text-decoration: none; }
 

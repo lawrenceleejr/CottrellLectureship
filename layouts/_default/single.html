@@ -8,6 +8,11 @@
           {{ .Content }}
         </div>
       {{ end }}
+      {{ with .Params.speaker.website }}
+        <p class="wrap bio-link">
+          <a href="{{ . }}" rel="external noopener">Read {{ $.Params.speaker.name }}&rsquo;s full biography <span aria-hidden="true">&#8599;</span></a>
+        </p>
+      {{ end }}
       <div class="wrap back">
         <a href="{{ (site.GetPage "/lectures").RelPermalink }}"><span aria-hidden="true">←</span> All speakers</a>
       </div>

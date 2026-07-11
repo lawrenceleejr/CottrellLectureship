@@ -14,8 +14,10 @@
     <p class="colloq-meta">
       {{ with $c.date }}
         {{ $d := time.AsTime . }}
+        {{/* Show the time only when one was actually set (not a bare date → midnight). */}}
+        {{ $hasTime := or (ne $d.Hour 0) (ne $d.Minute 0) }}
         <time class="colloq-when" datetime="{{ $d.Format "2006-01-02T15:04" }}">
-          {{ $d.Format "Mon, Jan 2, 2006" }}<span class="dot">·</span>{{ $d.Format "3:04 PM" }}
+          {{ $d.Format "Mon, Jan 2, 2006" }}{{ if $hasTime }}<span class="dot">·</span>{{ $d.Format "3:04 PM" }}{{ end }}
         </time>
       {{ end }}
       {{ with $c.location }}<span class="colloq-where">{{ . }}</span>{{ end }}
