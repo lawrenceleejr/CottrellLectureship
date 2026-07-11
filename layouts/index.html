@@ -43,7 +43,7 @@
     </div>
     {{ $pairs := (where site.RegularPages "Section" "lectures").ByDate.Reverse }}
     {{ range first 3 $pairs }}
-      {{ partial "pairing-card.html" (dict "page" . "level" 2) }}
+      {{ partial "pairing-card.html" (dict "page" . "level" 2 "compact" true) }}
     {{ else }}
       <p class="wrap empty">No visits announced yet — the first pairings are being arranged.</p>
     {{ end }}

@@ -7,6 +7,7 @@
 */}}
 {{ $page := .page }}
 {{ $lvl := .level | default 2 }}
+{{ $compact := .compact | default false }}
 {{ $sp := $page.Params.speaker }}
 {{/* Initials for the monogram fallback: strip a leading honorific, then take
      the first letter of the first and last remaining name words. */}}
@@ -45,7 +46,7 @@
             </svg>
           </div>
         {{ end }}
-        {{ partial "colloquium-box.html" (dict "c" $c "level" (add $lvl 1)) }}
+        {{ partial "colloquium-box.html" (dict "c" $c "level" (add $lvl 1) "compact" $compact "url" $page.RelPermalink) }}
       {{ end }}
     </div>
   </div>

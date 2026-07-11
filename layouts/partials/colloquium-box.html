@@ -1,12 +1,17 @@
 {{/*
   Renders ONE colloquium box. Context is a dict:
-    c     — a single item from a pairing's `colloquia` list: a map with kind,
-            institution, host{name,role,affiliation}, title, date, location,
-            link, abstract. Every field degrades gracefully.
-    level — heading level for the institution name (int).
+    c       — a single item from a pairing's `colloquia` list: a map with kind,
+              institution, host{name,role,affiliation}, title, date, location,
+              link, abstract. Every field degrades gracefully.
+    level   — heading level for the institution name (int).
+    compact — on listing pages: clamp the abstract to a few lines and link out to
+              the visit's own page instead of showing the full text + external link.
+    url     — the visit page's URL (used by the compact "Read more" link).
 */}}
 {{ $c := .c }}
 {{ $lvl := .level | default 3 }}
+{{ $compact := .compact | default false }}
+{{ $url := .url }}
 <article class="colloq">
   <header class="colloq-head">
     <span class="colloq-kind">{{ $c.kind | default "Colloquium" }}</span>
@@ -14,8 +19,10 @@
     <p class="colloq-meta">
       {{ with $c.date }}
         {{ $d := time.AsTime . }}
+        {{/* Show the time only when one was actually set (not a bare date → midnight). */}}
+        {{ $hasTime := or (ne $d.Hour 0) (ne $d.Minute 0) }}
         <time class="colloq-when" datetime="{{ $d.Format "2006-01-02T15:04" }}">
-          {{ $d.Format "Mon, Jan 2, 2006" }}<span class="dot">·</span>{{ $d.Format "3:04 PM" }}
+          {{ $d.Format "Mon, Jan 2, 2006" }}{{ if $hasTime }}<span class="dot">·</span>{{ $d.Format "3:04 PM" }}{{ end }}
         </time>
       {{ end }}
       {{ with $c.location }}<span class="colloq-where">{{ . }}</span>{{ end }}
@@ -23,7 +30,17 @@
   </header>
 
   {{ with $c.title }}<p class="colloq-title">&ldquo;{{ . }}&rdquo;</p>{{ end }}
-  {{ with $c.abstract }}<div class="colloq-abstract">{{ . | markdownify }}</div>{{ end }}
+
+  {{ with $c.abstract }}
+    {{ if $compact }}
+      <p class="colloq-abstract is-clamped">{{ . | markdownify | plainify }}</p>
+      {{ with $url }}
+        <a class="colloq-more" href="{{ . }}" aria-label="Read more about {{ with $c.title }}{{ . }}{{ else }}this talk{{ end }} at {{ $c.institution }}">Read more <span aria-hidden="true">→</span></a>
+      {{ end }}
+    {{ else }}
+      <div class="colloq-abstract">{{ . | markdownify }}</div>
+    {{ end }}
+  {{ end }}
 
   {{ with $c.host }}
     <footer class="colloq-host">
@@ -39,5 +56,6 @@
     </footer>
   {{ end }}
 
-  {{ with $c.link }}<a class="colloq-link" href="{{ . }}">Details <span aria-hidden="true">→</span></a>{{ end }}
+  {{/* External event link — shown on the visit's own page, not in listings. */}}
+  {{ if not $compact }}{{ with $c.link }}<a class="colloq-link" href="{{ . }}">Details <span aria-hidden="true">→</span></a>{{ end }}{{ end }}
 </article>
