@@ -181,22 +181,6 @@ img { max-width: 100%; height: auto; display: block; }
 .hero-lead { color: var(--ink); max-width: 46ch; margin: var(--sp-4) 0 0; }
 .hero--with-image .hero-lead { max-width: 42ch; }
 
-/* the definition band: three plain facts, ruled like a specimen strip */
-.hero-band {
-  display: flex; flex-wrap: wrap; margin: var(--sp-5) 0 0;
-  border-block: 1px solid var(--rule);
-}
-.hero-band > div {
-  flex: 1 1 8rem; padding: var(--sp-3) var(--sp-4) var(--sp-3) 0; margin-right: var(--sp-4);
-  border-right: 1px solid var(--border);
-}
-.hero-band > div:last-child { border-right: 0; margin-right: 0; }
-.hero-band dt {
-  font-size: var(--f-1); letter-spacing: .13em; text-transform: uppercase; color: var(--muted);
-  margin: 0 0 .2rem;
-}
-.hero-band dd { margin: 0; font-size: var(--f1); font-weight: 600; font-style: italic; }
-
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-5); }
 
 .hero-figure { margin: 0; }
