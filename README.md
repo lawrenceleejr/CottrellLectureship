@@ -57,6 +57,55 @@ Optional speaker bio in Markdown (shown on the visit's own page).
 
 > The shipped content is **placeholder examples**. Replace it with the real lineup.
 
+## The Scholars & Institutions map
+
+The [**Map**](content/map.md) page (`/map/`) plots **every college and university in the US
+and Canada** as a dot, and highlights — in terracotta — every institution that is home to a
+**Cottrell Scholar**. It's a quick way to see which nearby campuses could pair up for a
+collaborative lectureship. Click any dot for details (a scholar campus lists its scholars,
+their award years and disciplines); a toggle hides the grey dots to show only scholar
+campuses. The map is [Leaflet](https://leafletjs.com), self-hosted in
+[`static/vendor/leaflet/`](static/vendor/leaflet/) (no CDN); only the background map tiles
+load from the network at view time.
+
+### Update the scholars each year (one command)
+
+The scholar list comes straight from RCSA's
+[awardee dashboard](https://rescorp.org/cottrell-scholars/awardee-dashboard/). To refresh it:
+
+```sh
+python3 scripts/build_map_data.py     # needs Python 3 + internet; no extra packages
+git add data static && git commit -m "Refresh Cottrell Scholars map data" && git push
+```
+
+That single script pulls the current scholars, pulls the US institution list from
+[IPEDS](https://nces.ed.gov/ipeds/datacenter/), geocodes the Canadian universities (cached
+after the first run), matches every scholar to a campus, and rewrites the three data files
+the map reads. It prints a summary and — importantly — **names any institution it couldn't
+recognise** so nothing silently vanishes from the map.
+
+Handful of useful flags: `--offline` (skip the network and use the saved
+`data/cottrell_scholars.json`, which you can also hand-edit), `--include-2yr` (also show
+two-year / community colleges), `--ipeds PATH` (use an IPEDS `HDxxxx.zip` you downloaded).
+
+### If the script reports an unrecognised institution
+
+RCSA occasionally spells a school differently from IPEDS (e.g. `Ohio State University` vs.
+IPEDS's `Ohio State University-Main Campus`). Add one line to the `ALIASES` map near the top
+of [`scripts/build_map_data.py`](scripts/build_map_data.py) mapping the RCSA name to the
+official one, then re-run. New Canadian universities go in the `CANADA_UNIVERSITIES` list in
+the same file. Everything is plain data at the top of one script — no other files to touch.
+
+### What gets written (all committed, so the site build needs no network)
+
+| File | What it is |
+| --- | --- |
+| [`static/data/scholars.json`](static/data/) | scholar campuses + the scholars at each (the terracotta dots) |
+| [`static/data/colleges.json`](static/data/) | every other US + Canada college/university (the grey dots) |
+| [`static/data/meta.json`](static/data/) | counts, year range and build date shown under the map |
+| [`data/cottrell_scholars.json`](data/) | the raw scholar list pulled from RCSA (durable backup / hand-edit source) |
+| [`scripts/geocode_cache.json`](scripts/) | cached lat/lon so re-runs are fast and coordinates stay stable |
+
 ## Run locally
 
 Uses Docker (Hugo Extended, pinned) with a host fallback — see [`run.sh`](run.sh):

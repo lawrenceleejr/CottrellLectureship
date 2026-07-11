@@ -1,0 +1,334 @@
+{
+ "CA::acadiauniversity": {
+  "lat": 45.08825,
+  "lon": -64.36659
+ },
+ "CA::albertauniversityofthearts": {
+  "lat": 51.06204,
+  "lon": -114.09146
+ },
+ "CA::algomauniversity": {
+  "lat": 46.50203,
+  "lon": -84.28746
+ },
+ "CA::athabascauniversity": {
+  "lat": 54.71573,
+  "lon": -113.30803
+ },
+ "CA::bishopsuniversity": {
+  "lat": 45.36123,
+  "lon": -71.84136
+ },
+ "CA::brandonuniversity": {
+  "lat": 49.84317,
+  "lon": -99.96378
+ },
+ "CA::brockuniversity": {
+  "lat": 43.11774,
+  "lon": -79.24986
+ },
+ "CA::capebretonuniversity": {
+  "lat": 46.14083,
+  "lon": -60.18494
+ },
+ "CA::capilanouniversity": {
+  "lat": 49.31798,
+  "lon": -123.01948
+ },
+ "CA::carletonuniversity": {
+  "lat": 45.38586,
+  "lon": -75.695
+ },
+ "CA::coledetechnologiesuprieure": {
+  "lat": 45.49452,
+  "lon": -73.56286
+ },
+ "CA::concordiauniversity": {
+  "lat": 45.49524,
+  "lon": -73.57858
+ },
+ "CA::dalhousieuniversity": {
+  "lat": 44.6362,
+  "lon": -63.592
+ },
+ "CA::emilycarruniversityofartanddesign": {
+  "lat": 49.26758,
+  "lon": -123.09218
+ },
+ "CA::hecmontral": {
+  "lat": 45.50391,
+  "lon": -73.62213
+ },
+ "CA::institutnationaldelarecherchescientifique": {
+  "lat": 46.81274,
+  "lon": -71.22434
+ },
+ "CA::kwantlenpolytechnicuniversity": {
+  "lat": 49.19068,
+  "lon": -122.84834
+ },
+ "CA::lakeheaduniversity": {
+  "lat": 48.42031,
+  "lon": -89.26234
+ },
+ "CA::laurentianuniversity": {
+  "lat": 46.46664,
+  "lon": -80.97387
+ },
+ "CA::macewanuniversity": {
+  "lat": 53.54736,
+  "lon": -113.50754
+ },
+ "CA::mcgilluniversity": {
+  "lat": 45.50306,
+  "lon": -73.57619
+ },
+ "CA::mcmasteruniversity": {
+  "lat": 43.26394,
+  "lon": -79.91783
+ },
+ "CA::memorialuniversityofnewfoundland": {
+  "lat": 47.57335,
+  "lon": -52.73331
+ },
+ "CA::mountallisonuniversity": {
+  "lat": 45.8994,
+  "lon": -64.3731
+ },
+ "CA::mountroyaluniversity": {
+  "lat": 51.01162,
+  "lon": -114.1307
+ },
+ "CA::mountstvincentuniversity": {
+  "lat": 44.67117,
+  "lon": -63.64561
+ },
+ "CA::nipissinguniversity": {
+  "lat": 46.34382,
+  "lon": -79.48992
+ },
+ "CA::nscaduniversity": {
+  "lat": 44.63929,
+  "lon": -63.56548
+ },
+ "CA::ocaduniversity": {
+  "lat": 43.65235,
+  "lon": -79.39081
+ },
+ "CA::ontariotechuniversity": {
+  "lat": 43.94834,
+  "lon": -78.8982
+ },
+ "CA::polytechniquemontral": {
+  "lat": 45.50459,
+  "lon": -73.613
+ },
+ "CA::queensuniversitykingston": {
+  "lat": 44.22635,
+  "lon": -76.49576
+ },
+ "CA::royalmilitarycollegeofcanada": {
+  "lat": 44.23174,
+  "lon": -76.46811
+ },
+ "CA::royalroadsuniversity": {
+  "lat": 48.43032,
+  "lon": -123.47965
+ },
+ "CA::simonfraseruniversity": {
+  "lat": 49.27671,
+  "lon": -122.9178
+ },
+ "CA::stfrancisxavieruniversity": {
+  "lat": 45.61753,
+  "lon": -61.99488
+ },
+ "CA::stmarysuniversity": {
+  "lat": 44.63111,
+  "lon": -63.58013
+ },
+ "CA::stthomasuniversity": {
+  "lat": 45.94415,
+  "lon": -66.64587
+ },
+ "CA::thompsonriversuniversity": {
+  "lat": 50.67245,
+  "lon": -120.36403
+ },
+ "CA::torontometropolitanuniversity": {
+  "lat": 43.65853,
+  "lon": -79.37847
+ },
+ "CA::trentuniversity": {
+  "lat": 44.35729,
+  "lon": -78.28938
+ },
+ "CA::universitdemoncton": {
+  "lat": 46.10559,
+  "lon": -64.78699
+ },
+ "CA::universitdemontral": {
+  "lat": 45.50476,
+  "lon": -73.61454
+ },
+ "CA::universitdesherbrooke": {
+  "lat": 45.37677,
+  "lon": -71.94027
+ },
+ "CA::universitdestboniface": {
+  "lat": 49.88833,
+  "lon": -97.11972
+ },
+ "CA::universitduqubecchicoutimi": {
+  "lat": 48.42005,
+  "lon": -71.05253
+ },
+ "CA::universitduqubecenabitibitmiscamingue": {
+  "lat": 48.23038,
+  "lon": -79.00808
+ },
+ "CA::universitduqubecenoutaouais": {
+  "lat": 45.42226,
+  "lon": -75.7391
+ },
+ "CA::universitduqubecmontral": {
+  "lat": 45.51323,
+  "lon": -73.56141
+ },
+ "CA::universitduqubecrimouski": {
+  "lat": 48.45167,
+  "lon": -68.51131
+ },
+ "CA::universitduqubectroisrivires": {
+  "lat": 46.3467,
+  "lon": -72.57926
+ },
+ "CA::universitlaval": {
+  "lat": 46.78116,
+  "lon": -71.2768
+ },
+ "CA::universitsainteanne": {
+  "lat": 44.33398,
+  "lon": -66.11979
+ },
+ "CA::universitycollegeofthenorth": {
+  "lat": 53.81915,
+  "lon": -101.23612
+ },
+ "CA::universityofalberta": {
+  "lat": 53.52682,
+  "lon": -113.52449
+ },
+ "CA::universityofbritishcolumbia": {
+  "lat": 49.25789,
+  "lon": -123.24298
+ },
+ "CA::universityofcalgary": {
+  "lat": 51.07505,
+  "lon": -114.13881
+ },
+ "CA::universityofguelph": {
+  "lat": 43.53279,
+  "lon": -80.225
+ },
+ "CA::universityofkingscollege": {
+  "lat": 43.661,
+  "lon": -79.39596
+ },
+ "CA::universityoflethbridge": {
+  "lat": 49.67446,
+  "lon": -112.86061
+ },
+ "CA::universityofmanitoba": {
+  "lat": 49.90424,
+  "lon": -97.16172
+ },
+ "CA::universityofnewbrunswick": {
+  "lat": 45.94552,
+  "lon": -66.64019
+ },
+ "CA::universityofnorthernbritishcolumbia": {
+  "lat": 53.89257,
+  "lon": -122.81472
+ },
+ "CA::universityofottawa": {
+  "lat": 45.42253,
+  "lon": -75.68339
+ },
+ "CA::universityofprinceedwardisland": {
+  "lat": 46.25948,
+  "lon": -63.14066
+ },
+ "CA::universityofregina": {
+  "lat": 50.41523,
+  "lon": -104.589
+ },
+ "CA::universityofsaskatchewan": {
+  "lat": 52.13442,
+  "lon": -106.62778
+ },
+ "CA::universityofthefraservalley": {
+  "lat": 49.02834,
+  "lon": -122.28491
+ },
+ "CA::universityoftoronto": {
+  "lat": 43.66081,
+  "lon": -79.39603
+ },
+ "CA::universityoftorontoscarborough": {
+  "lat": 43.78427,
+  "lon": -79.18512
+ },
+ "CA::universityofvictoria": {
+  "lat": 48.46206,
+  "lon": -123.31142
+ },
+ "CA::universityofwaterloo": {
+  "lat": 43.47336,
+  "lon": -80.54128
+ },
+ "CA::universityofwindsor": {
+  "lat": 42.30515,
+  "lon": -83.0665
+ },
+ "CA::universityofwinnipeg": {
+  "lat": 49.89148,
+  "lon": -97.15342
+ },
+ "CA::vancouverislanduniversity": {
+  "lat": 49.15789,
+  "lon": -123.96564
+ },
+ "CA::westernuniversity": {
+  "lat": 43.00542,
+  "lon": -81.2748
+ },
+ "CA::wilfridlaurieruniversity": {
+  "lat": 43.4728,
+  "lon": -80.52809
+ },
+ "CA::yorkuniversity": {
+  "lat": 43.77433,
+  "lon": -79.50027
+ },
+ "CA::yukonuniversity": {
+  "lat": 60.75009,
+  "lon": -135.09771
+ },
+ "SCH::queensuniversity": {
+  "lat": 44.22635,
+  "lon": -76.49576
+ },
+ "SCH::researchfoundationofcunyadvancedscienceresearchcenter": {
+  "lat": 40.81563,
+  "lon": -73.95023
+ },
+ "SCH::scrippsresearchinstitute": {
+  "lat": 32.8985,
+  "lon": -117.24288
+ },
+ "SCH::universityofvictoria": {
+  "lat": 48.46206,
+  "lon": -123.31142
+ }
+}
