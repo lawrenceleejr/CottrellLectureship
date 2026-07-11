@@ -14,12 +14,9 @@ colloquia:
     institution: "University of California, San Diego"
     coords: [32.87775, -117.23587]
     host:
-      # TODO: confirm host. UCSD's Cottrell Scholar in particle physics is
-      # Javier Duarte (Cottrell Scholar 2023). Fill in name / role / affiliation, e.g.:
-      #   name: "Dr. Javier Duarte"
-      #   role: "Cottrell Scholar 2023"
-      #   affiliation: "University of California, San Diego, Dept. of Physics"
-      name: "To be announced"
+      name: "Dr. Javier Duarte"
+      role: "Cottrell Scholar 2023"
+      affiliation: "University of California, San Diego, Dept. of Physics"
     title: "The Past, Present, and Future of Particle Discovery"
     date: 2026-05-07          # add a time to show it, e.g. 2026-05-07T16:00:00
     location: ""              # TODO: building / room
@@ -39,10 +36,9 @@ colloquia:
     institution: "San Diego State University"
     coords: [32.77525, -117.07123]
     host:
-      # TODO: SDSU host (the regional partner) — fill in name / role / affiliation, e.g.:
-      #   name: "Dr. …"
-      #   affiliation: "San Diego State University, Dept. of Physics & Astronomy"
-      name: "To be announced"
+      name: "Dr. Sanjay Behura"
+      role: "Regional partner"
+      affiliation: "San Diego State University, Dept. of Physics"
     title: "The Past, Present, and Future of Particle Discovery"
     date: 2026-05-08              # add a time to show it, e.g. 2026-05-08T15:00:00
     location: ""                  # TODO: building / room
