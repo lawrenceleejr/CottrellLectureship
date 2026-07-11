@@ -9,6 +9,10 @@ the map. It produces two data files the map reads at runtime:
     static/data/scholars.json   institutions that have a Cottrell Scholar (accent
                                 dots) + the scholars at each one
 
+Every record in both files carries a "type" (R1/R2/R3/Comp/PUI/2 yr/Special/
+Foreign, from the Carnegie classification) and, where IPEDS reports it, a "size"
+(enrollment band 1-5). The map's filter toolbar reads both.
+
 ...plus a couple of durable side files:
 
     data/cottrell_scholars.json   the raw scholar list pulled from RCSA (a backup
@@ -372,6 +376,32 @@ def _coords(row: dict):
     return round(lat, 5), round(lon, 5)
 
 
+# Carnegie 2021 Basic Classification (IPEDS "C21BASIC") -> the same compact
+# institution vocabulary RCSA uses for scholar campuses, so every dot on the map
+# sits on one scale. The mapping was validated by cross-tabulating it against
+# RCSA's own institution_type label for all 209 Cottrell Scholar campuses:
+# R1<->15, R2<->16, R3<->17, Comp<->18/19/20 and PUI<->21/22 line up almost
+# perfectly. (Codes: 15 doctoral very-high research; 16 doctoral high research;
+# 17 doctoral/professional; 18-20 master's; 14/21-23 baccalaureate; 1-13
+# associate's / two-year; 24-33 special-focus, tribal, unclassified.)
+def carnegie_type(code: int) -> str:
+    if code == 15:               return "R1"
+    if code == 16:               return "R2"
+    if code == 17:               return "R3"
+    if code in (18, 19, 20):     return "Comp"
+    if code in (14, 21, 22, 23): return "PUI"
+    if 1 <= code <= 13:          return "2 yr"
+    if 24 <= code <= 33:         return "Special"
+    return ""                    # -2 / not classified
+
+
+# IPEDS INSTSIZE enrollment band, kept as the raw 1-5 code so the map can bucket
+# and label it. Anything not reported (-1/-2) becomes None and is omitted.
+#   1: <1,000   2: 1,000-4,999   3: 5,000-9,999   4: 10,000-19,999   5: 20,000+
+def inst_size(code: int):
+    return code if 1 <= code <= 5 else None
+
+
 def load_us_institutions(ipeds_zip: bytes, include_2yr: bool) -> list[dict]:
     with zipfile.ZipFile(io.BytesIO(ipeds_zip)) as zf:
         name = next(n for n in zf.namelist() if n.lower().endswith(".csv"))
@@ -388,7 +418,9 @@ def load_us_institutions(ipeds_zip: bytes, include_2yr: bool) -> list[dict]:
             continue
         out.append({"name": row["INSTNM"].strip(), "city": row["CITY"].strip(),
                     "state": row["STABBR"].strip(), "country": "US",
-                    "lat": coords[0], "lon": coords[1]})
+                    "lat": coords[0], "lon": coords[1],
+                    "type": carnegie_type(_int(row, "C21BASIC")),
+                    "size": inst_size(_int(row, "INSTSIZE"))})
     log(f"  {len(out)} US institutions from IPEDS "
         f"({'all degree-granting' if include_2yr else '4-year degree-granting'})")
     return out
@@ -408,7 +440,8 @@ def load_ca_institutions(geo: Geocoder) -> list[dict]:
             log(f"    ! could not geocode {name}; skipping")
             continue
         out.append({"name": name, "city": city, "state": prov, "country": "CA",
-                    "lat": hit["lat"], "lon": hit["lon"]})
+                    "lat": hit["lat"], "lon": hit["lon"],
+                    "type": "Foreign", "size": None})
     log(f"  {len(out)} Canadian universities (geocoded)")
     return out
 
@@ -490,17 +523,30 @@ def build(args) -> None:
         # Show the recognisable RCSA name (e.g. "Ohio State University", not the
         # IPEDS "Ohio State University-Main Campus"); keep the base coordinates.
         display = max(payload["orgs"], key=payload["orgs"].get) if payload["orgs"] else inst["name"]
-        scholar_insts.append({
-            "name": display, "city": inst["city"], "state": inst["state"],
-            "country": inst["country"], "lat": inst["lat"], "lon": inst["lon"],
-            "type": inst_type, "count": len(recs), "scholars": recs,
-        })
+        # Prefer RCSA's own type label; fall back to the matched IPEDS Carnegie
+        # type for the rare campus RCSA left untyped. Enrollment size comes from
+        # the matched IPEDS record (absent for standalone / Canadian campuses).
+        rec = {"name": display, "city": inst["city"], "state": inst["state"],
+               "country": inst["country"], "lat": inst["lat"], "lon": inst["lon"],
+               "type": inst_type or inst.get("type", "")}
+        if inst.get("size"):
+            rec["size"] = inst["size"]
+        rec["count"] = len(recs)
+        rec["scholars"] = recs
+        scholar_insts.append(rec)
     scholar_insts.sort(key=lambda x: (-x["count"], x["name"]))
 
     # ---- base colleges = every institution WITHOUT a current scholar ----------
-    colleges = [{"name": i["name"], "city": i["city"], "state": i["state"],
-                 "country": i["country"], "lat": i["lat"], "lon": i["lon"]}
-                for i in base if id(i) not in scholar_ids]
+    colleges = []
+    for i in base:
+        if id(i) in scholar_ids:
+            continue
+        rec = {"name": i["name"], "city": i["city"], "state": i["state"],
+               "country": i["country"], "lat": i["lat"], "lon": i["lon"],
+               "type": i.get("type", "")}
+        if i.get("size"):
+            rec["size"] = i["size"]
+        colleges.append(rec)
 
     # ---- write ---------------------------------------------------------------
     years = [r["year"] for si in scholar_insts for r in si["scholars"] if r["year"]]

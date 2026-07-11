@@ -111,6 +111,7 @@
 .leaflet-popup-content { margin: 0.9rem 1rem; line-height: 1.45; }
 .cs-pop-name { font-weight: 600; font-size: var(--f0); margin: 0 0 2px; }
 .cs-pop-meta { color: var(--muted); font-size: var(--f-1); margin: 0 0 .5rem; }
+.cs-pop-class { margin-top: -.35rem; }
 .cs-pop-tag {
   display: inline-block; font-size: 11px; font-weight: 600;
   padding: 1px 7px; border-radius: 999px; margin-bottom: .5rem;
@@ -191,10 +192,10 @@
 /* Explicit display rules below would otherwise defeat the [hidden] attribute. */
 .map-toolbar [hidden] { display: none !important; }
 
-.mt-row { display: flex; gap: var(--sp-2); align-items: stretch; }
+.mt-row { display: flex; gap: var(--sp-2); align-items: stretch; flex-wrap: wrap; }
 
 .mt-search {
-  position: relative; flex: 1 1 auto; display: flex; align-items: center;
+  position: relative; flex: 1 1 240px; display: flex; align-items: center;
 }
 .mt-search-ic {
   position: absolute; left: .7rem; width: 18px; height: 18px;
@@ -218,7 +219,7 @@
 }
 .mt-clear:hover { background: var(--surface-2); color: var(--ink); }
 
-.mt-radius-btn {
+.mt-radius-btn, .mt-filter-btn {
   flex: none; display: inline-flex; align-items: center; gap: .45rem;
   font-family: var(--font-serif); font-weight: 600; font-size: var(--f0);
   color: var(--ink); background: var(--surface);
@@ -226,7 +227,7 @@
   padding: .5rem .9rem; min-height: 44px; cursor: pointer;
   transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
-.mt-radius-btn:hover { background: var(--surface-2); }
+.mt-radius-btn:hover, .mt-filter-btn:hover { background: var(--surface-2); }
 .mt-radius-ic {
   width: 15px; height: 15px; flex: none; border-radius: 50%;
   border: 2px solid currentColor; position: relative;
@@ -235,8 +236,25 @@
   content: ""; position: absolute; inset: 0; margin: auto;
   width: 4px; height: 4px; border-radius: 50%; background: currentColor;
 }
-.mt-radius-btn.is-on {
+/* Funnel glyph for the Filters button. */
+.mt-filter-ic { width: 14px; height: 15px; flex: none; position: relative; }
+.mt-filter-ic::before {
+  content: ""; position: absolute; top: 2px; left: 0; right: 0;
+  border-left: 7px solid transparent; border-right: 7px solid transparent;
+  border-top: 8px solid currentColor;
+}
+.mt-filter-ic::after {
+  content: ""; position: absolute; top: 9px; left: 50%; transform: translateX(-50%);
+  width: 2px; height: 4px; background: currentColor;
+}
+.mt-radius-btn.is-on, .mt-filter-btn.is-on {
   background: var(--accent); color: var(--btn-ink); border-color: transparent;
+}
+.mt-filter-count {
+  display: inline-grid; place-items: center; min-width: 18px; height: 18px;
+  padding: 0 5px; border-radius: 999px; font-size: 11px; font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: color-mix(in srgb, var(--btn-ink) 24%, transparent); color: var(--btn-ink);
 }
 
 .mt-search-meta {
@@ -250,12 +268,40 @@
 }
 .mt-fit:hover { color: var(--accent-2); }
 
-/* -------------------------------------------------------- radius panel */
-.mt-radius-panel {
+/* ------------------------------------------------- filter & radius panels */
+.mt-radius-panel, .mt-filter-panel {
   margin-top: var(--sp-3); padding: var(--sp-3);
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius); box-shadow: var(--shadow);
 }
+
+/* -------------------------------------------------------- filter chips */
+.mt-group + .mt-group { margin-top: var(--sp-3); }
+.mt-group-label {
+  margin: 0 0 .5rem; font-size: var(--f-1); font-weight: 600; color: var(--ink);
+  letter-spacing: .01em;
+}
+.mt-group-note { font-weight: 400; color: var(--muted); }
+.mt-chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.mt-chip {
+  display: inline-flex; align-items: baseline; gap: .35rem;
+  font-family: var(--font-serif); font-size: var(--f-1); color: var(--ink);
+  background: var(--paper); border: 1px solid var(--border-strong);
+  border-radius: 999px; padding: .4rem .8rem; min-height: 36px; cursor: pointer;
+  transition: background .12s ease, color .12s ease, border-color .12s ease;
+}
+.mt-chip:hover { background: var(--surface-2); }
+.mt-chip.is-on { background: var(--accent); color: var(--btn-ink); border-color: transparent; }
+.mt-chip:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 1px; }
+.mt-chip-hint { font-size: 11px; color: var(--muted); }
+.mt-chip.is-on .mt-chip-hint { color: color-mix(in srgb, var(--btn-ink) 78%, transparent); }
+.mt-clearfilters {
+  margin-top: var(--sp-3); font-family: var(--font-serif); font-size: var(--f-1);
+  font-weight: 600; color: var(--accent-ink); background: transparent; border: 0;
+  cursor: pointer; padding: .15rem .3rem;
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.mt-clearfilters:hover { color: var(--accent-2); }
 .mt-center-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .mt-center-row button {
   font-family: var(--font-serif); font-size: var(--f-1); color: var(--ink);
@@ -312,7 +358,14 @@
   flex: none; font-size: var(--f-1); font-weight: 600; color: var(--accent-ink);
   font-variant-numeric: tabular-nums;
 }
-.cs-res-more { list-style: none; padding: .5rem .4rem 0; font-size: var(--f-1); color: var(--muted); font-style: italic; }
+.cs-res-more { list-style: none; padding: .5rem .4rem 0; font-size: var(--f-1); color: var(--muted); }
+.cs-res-more.cs-res-note { font-style: italic; line-height: 1.35; }
+.cs-res-showall {
+  font-family: var(--font-serif); font-size: var(--f-1); font-weight: 600;
+  color: var(--accent-ink); background: transparent; border: 0; cursor: pointer;
+  padding: .2rem .3rem; text-decoration: underline; text-underline-offset: 2px;
+}
+.cs-res-showall:hover { color: var(--accent-2); }
 
 .mt-hint {
   margin: var(--sp-2) 0 0; font-size: var(--f-1); color: var(--accent-ink);

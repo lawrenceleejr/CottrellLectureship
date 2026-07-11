@@ -7,3 +7,5 @@
 .docker-build-hash
 # OS / editor cruft
 .DS_Store
+# Python bytecode cache (from scripts/build_map_data.py)
+__pycache__/
