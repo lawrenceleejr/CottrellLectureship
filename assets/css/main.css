@@ -299,9 +299,19 @@ img { max-width: 100%; height: auto; display: block; }
 .colloq-when .dot { margin-inline: .4rem; color: var(--border-strong); }
 .colloq-where::before { content: "📍 "; }
 .colloq-title { font-family: var(--font-serif); font-size: var(--f2); font-style: italic; font-weight: 500; color: var(--ink); margin: 0 0 var(--sp-2); line-height: 1.2; }
-.colloq-abstract { color: var(--ink); font-size: var(--f0); }
+.colloq-abstract { color: var(--ink); font-size: var(--f0); margin: 0; }
 .colloq-abstract p { margin: 0 0 var(--sp-2); }
 .colloq-abstract :last-child { margin-bottom: 0; }
+/* listing pages: clamp the abstract to a few lines, then link out to the visit */
+.colloq-abstract.is-clamped {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.colloq-more {
+  align-self: start; margin-top: var(--sp-2); font-weight: 600; text-decoration: none;
+  color: var(--accent-ink);
+}
+.colloq-more:hover { color: var(--accent-2); text-decoration: underline; }
 
 .colloq-host {
   margin-top: auto; padding-top: var(--sp-3); margin-top: var(--sp-3);
