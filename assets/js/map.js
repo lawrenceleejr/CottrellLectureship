@@ -17,10 +17,14 @@
   "use strict";
 
   // Basemap tiles. Light, low-chroma tiles so the coloured dots carry the map.
-  // Swap these two URLs to use a different provider (e.g. OpenStreetMap standard).
+  // The place-name labels ride as a *separate* overlay (labelsUrl) in their own
+  // pane, so map.css can lift their contrast without brightening the quiet base
+  // geography underneath. Swap these URLs to use a different provider.
   var TILES = {
-    light: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-    dark:  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+    baseUrl:   { light: "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",
+                 dark:  "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png" },
+    labelsUrl: { light: "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png",
+                 dark:  "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png" },
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
       'contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -130,7 +134,7 @@
     tap: true
   });
 
-  var tiles = L.tileLayer(isDark() ? TILES.dark : TILES.light, {
+  var tiles = L.tileLayer(isDark() ? TILES.baseUrl.dark : TILES.baseUrl.light, {
     attribution: TILES.attribution,
     subdomains: TILES.subdomains,
     maxZoom: TILES.maxZoom,
@@ -161,6 +165,21 @@
   // centre pin at 665) so they always read as the map's highlights.
   map.createPane("cs-host");
   map.getPane("cs-host").style.zIndex = 660;
+  // Place-name labels: a transparent CARTO overlay in its own pane, sitting just
+  // above the base tiles but below the dots — the same stacking as the old
+  // all-in-one tiles, so the coloured dots still carry the map. Kept click-through
+  // (pointer-events:none) so it can never swallow a tap meant for a dot. map.css
+  // filters this pane's tiles to make the soft-grey labels legible again.
+  map.createPane("cs-labels");
+  map.getPane("cs-labels").style.zIndex = 350;
+  map.getPane("cs-labels").style.pointerEvents = "none";
+  var labelTiles = L.tileLayer(isDark() ? TILES.labelsUrl.dark : TILES.labelsUrl.light, {
+    subdomains: TILES.subdomains,
+    maxZoom: TILES.maxZoom,
+    detectRetina: true,
+    pane: "cs-labels",
+    className: "cs-label-tiles"
+  }).addTo(map);
   var radiusRenderer = L.svg({ pane: "cs-radius" });
 
   // --------------------------------------------------------------- helpers
@@ -969,7 +988,8 @@
   // ------------------------------------------------------ theme reactivity
   function retheme() {
     PAL = palette();
-    tiles.setUrl(isDark() ? TILES.dark : TILES.light);
+    tiles.setUrl(isDark() ? TILES.baseUrl.dark : TILES.baseUrl.light);
+    labelTiles.setUrl(isDark() ? TILES.labelsUrl.dark : TILES.labelsUrl.light);
     collegeMarkers.forEach(function (m) {
       m.setStyle({ color: PAL.collegeRing, fillColor: PAL.college });
     });

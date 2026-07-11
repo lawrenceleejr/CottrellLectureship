@@ -60,6 +60,18 @@
 .leaflet-container { font-family: var(--font-serif); font-size: var(--f-1); }
 .leaflet-container a { color: var(--accent-ink); }
 
+/* ------------------------------------------------------------------ labels
+   Place-name labels ride as a separate CARTO overlay (see map.js), so their
+   contrast can be lifted without brightening the quiet base geography. CARTO's
+   label tiles are a soft grey that washes out against both themes; these filters
+   firm up the city / state names so the map is readable. (The pane is
+   click-through — set in map.js — so brightened labels never intercept a tap.) */
+.cs-label-tiles { filter: brightness(0.72) contrast(1.45); }   /* light: darken the pale grey */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .cs-label-tiles { filter: brightness(1.95) contrast(1.05); }
+}
+:root[data-theme="dark"] .cs-label-tiles { filter: brightness(1.95) contrast(1.05); }
+
 /* ------------------------------------------------------------- attribution */
 .leaflet-control-attribution {
   background: color-mix(in srgb, var(--map-panel) 86%, transparent) !important;
