@@ -1,11 +1,18 @@
 <footer class="site-footer">
   <div class="wrap footer-inner">
+    <p class="footer-brand">
+      <svg class="rings" viewBox="0 0 34 20" fill="none" aria-hidden="true">
+        <circle class="ring-a" cx="12" cy="10" r="8"></circle>
+        <circle class="ring-b" cx="22" cy="10" r="8"></circle>
+      </svg>
+      <strong>{{ site.Title }}</strong>
+    </p>
     <p class="footer-credit">
-      The <strong>{{ site.Title }}</strong> is funded by {{ site.Params.funder }}
-      as a {{ site.Params.program }}.
+      A {{ site.Params.program }}, supported by {{ site.Params.funder }} — connecting
+      departments across the United States and Canada.
     </p>
     {{ with site.Params.contactEmail }}
-      <p class="footer-contact">Questions about hosting or attending? <a href="mailto:{{ . }}">{{ . }}</a></p>
+      <p class="footer-contact">Interested in hosting a visit? <a href="mailto:{{ . }}">{{ . }}</a></p>
     {{ end }}
     <p class="footer-meta">© {{ now.Year }} {{ site.Title }}</p>
   </div>

@@ -12,7 +12,7 @@ disableKinds = ["taxonomy", "term"]
 # Order lecture pages newest-first by default (templates also sort explicitly).
 [params]
   # ---- Edit these for your series ----------------------------------------
-  tagline = "One teacher-scholar, two talks in the same region — hosted by a Cottrell Scholar and a regional partner."
+  tagline = "A distinguished lectureship that brings leading teacher-scholars to paired institutions across the United States and Canada, building lasting connections between their departments."
   funder = "Research Corporation for Science Advancement (RCSA)"
   funderShort = "RCSA"
   program = "Cottrell Collaborative project"

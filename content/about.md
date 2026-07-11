@@ -1,44 +1,47 @@
 ---
 title: "About the Series"
-description: "How the Cottrell Lectureship Series brings a teacher-scholar to two institutions in the same region."
+description: "A distinguished lectureship that brings leading teacher-scholars to paired institutions across the United States and Canada."
 ---
+
+<p class="lead dropcap">A research university and the college an hour down the road can go years without
+sharing a speaker. The <strong>Cottrell Lectureship Series</strong> brings distinguished teacher-scholars
+to both — and, in doing so, connects departments across the United States and Canada.</p>
 
 ## The idea
 
-The **Cottrell Lectureship Series** brings a **teacher-scholar** to a region to give **two
-talks** in a single visit — one hosted by a [Cottrell
-Scholar](https://rescorp.org/cottrell-scholars), the other by a regional partner at a
-nearby college or university. One trip, two talks, two audiences: exceptional science and
-teaching reach both campuses at once, and new connections form between institutions.
+A [Cottrell Scholar](https://rescorp.org/cottrell-scholars) and a colleague at a neighboring institution
+join together to host a visiting teacher-scholar. Over a single trip the scholar speaks at both
+departments in turn, so a distinguished voice in chemistry, physics, or astronomy reaches two
+communities at once — and the two departments that hosted them have reason to keep working together.
 
-Each entry on this site is a **single visit**: the speaker appears in two linked boxes,
-one per talk, each showing the details and the local host.
+<p class="pullquote">Two audiences, two departments, and a connection that outlasts the visit.</p>
+
+Each entry on this site is one such visit: the speaker appears in two linked talks — the teal one
+hosted by the Cottrell Scholar, the terracotta one by the partnering department — each with its own
+date, room, and host.
 
 ## Who funds it
 
-This series is supported by the **Research Corporation for Science Advancement (RCSA)** —
-one of the oldest U.S. foundations devoted to basic research — as **a Cottrell
-Collaborative project**, proposed and led by Cottrell Scholars. The Cottrell Scholar Award
-recognizes early-career faculty in chemistry, physics, and astronomy who excel as both
-researchers and educators.
+The series is a **Cottrell Collaborative project** of the **Research Corporation for Science
+Advancement (RCSA)** — one of the oldest U.S. foundations devoted to basic research — proposed and led
+by Cottrell Scholars themselves. The Cottrell Scholar Award recognizes early-career faculty in
+chemistry, physics, and astronomy who are as accomplished in the lecture hall as they are in the lab.
 
-> The names, institutions, dates, and abstracts currently shown are **placeholder
-> examples**. Replace them with the real lineup — see the repository README for how to add
-> a visit.
+> The names, institutions, dates, and abstracts shown across the site are **placeholder examples**.
+> Replace them with the real lineup — see the repository README for how to add a visit.
 
 ## How a pairing works
 
-1. **A pairing forms.** A Cottrell Scholar and a regional partner — at a nearby college or
-   university — team up to bring a teacher-scholar to their region.
-2. **They apply.** The pair submits a short application to the Cottrell Collaborative
-   describing the visit and the speaker they'd like to host.
-3. **Two talks, one trip.** On a single visit, the teacher-scholar gives a talk at each
-   host's institution, reaching two audiences in the same region.
+1. **A pairing forms.** A Cottrell Scholar and a colleague at a nearby institution agree to co-host a
+   visit and choose the teacher-scholar they would like to bring.
+2. **They apply.** The pair submits a short proposal to the Cottrell Collaborative describing the visit
+   and the speaker.
+3. **Two talks, one trip.** The teacher-scholar comes for a single visit and speaks at each host's
+   institution, reaching two communities in the same region.
 
-## Get involved
+## Hosting a visit
 
-Interested in hosting a visit or bringing a teacher-scholar to your region? We especially
-encourage **reaching across campus lines** — pairing a research university with a nearby
-college, or two institutions — to build lasting connections.
-Please [get in touch](mailto:cottrell-lectures@example.edu) — we would love to hear from
-you. *(Replace this address with your real contact.)*
+The series especially welcomes pairings that reach across institutional lines — a research university
+with a neighboring college, or two departments that seldom have cause to collaborate. Those are the
+connections it was created to build. If you would like to bring a teacher-scholar to your region,
+please [get in touch](mailto:cottrell-lectures@example.edu). *(Replace this address with your real contact.)*

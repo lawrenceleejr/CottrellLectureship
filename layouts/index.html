@@ -1,28 +1,51 @@
 {{ define "main" }}
+  {{ $img := .Params.heroImage }}
   <section class="hero">
     <div class="wrap">
-      <p class="hero-kicker">{{ site.Params.funderShort }} · {{ site.Params.program }}</p>
-      <h1 class="hero-title">{{ site.Title }}</h1>
-      <p class="hero-tagline">{{ site.Params.tagline }}</p>
-      {{ with .Content }}<div class="hero-intro prose">{{ . }}</div>{{ end }}
-      <p class="hero-actions">
-        <a class="btn" href="#speakers">See recent visits</a>
-        <a class="btn btn-ghost" href="{{ (site.GetPage "/about").RelPermalink }}">How the series works</a>
-      </p>
+      <div class="hero-inner{{ with $img }} hero--with-image{{ end }}">
+        <div class="hero-copy">
+          <p class="hero-kicker eyebrow eyebrow--rule">{{ site.Params.funderShort }} · {{ site.Params.program }}</p>
+          <h1 class="hero-title">{{ .Params.headline | default site.Title }}</h1>
+          {{ with .Params.deck }}<p class="hero-deck">{{ . | markdownify }}</p>{{ end }}
+          {{ with .Content }}<div class="hero-lead dropcap">{{ . }}</div>{{ end }}
+          <dl class="hero-band">
+            <div><dt>Format</dt><dd>Two talks, one trip</dd></div>
+            <div><dt>Reach</dt><dd>U.S. &amp; Canada</dd></div>
+            <div><dt>Purpose</dt><dd>Lasting ties</dd></div>
+          </dl>
+          <p class="hero-actions">
+            <a class="btn" href="#speakers">Recent visits</a>
+            <a class="btn btn-ghost" href="{{ (site.GetPage "/about").RelPermalink }}">How a pairing works</a>
+          </p>
+        </div>
+        {{ with $img }}
+          <figure class="hero-figure">
+            <img src="{{ strings.TrimPrefix "/" . | relURL }}" alt="{{ $.Params.heroImageAlt | default "" }}" loading="eager">
+            {{ with $.Params.heroImageCredit }}<figcaption>{{ . }}</figcaption>{{ end }}
+          </figure>
+        {{ end }}
+      </div>
     </div>
   </section>
 
   <section class="lectures" id="speakers">
     <div class="wrap section-head">
+      <div class="section-eyebrow">
+        <svg class="rings" viewBox="0 0 34 20" fill="none" aria-hidden="true">
+          <circle class="ring-a" cx="12" cy="10" r="8"></circle>
+          <circle class="ring-b" cx="22" cy="10" r="8"></circle>
+        </svg>
+        <span class="eyebrow">Visiting scholars</span>
+      </div>
       <h2 class="section-title">Recent visits</h2>
-      <p class="section-sub">Each teacher-scholar gives two talks in the same region — one hosted by a Cottrell
-      Scholar, the other by a regional partner at a nearby college or university.</p>
+      <p class="section-sub">Each teacher-scholar below visited two neighboring institutions in a single trip —
+      one talk hosted by a Cottrell Scholar, the other by a partnering department nearby.</p>
     </div>
     {{ $pairs := (where site.RegularPages "Section" "lectures").ByDate.Reverse }}
     {{ range first 3 $pairs }}
       {{ partial "pairing-card.html" (dict "page" . "level" 2) }}
     {{ else }}
-      <p class="wrap empty">No visits announced yet — check back soon.</p>
+      <p class="wrap empty">No visits announced yet — the first pairings are being arranged.</p>
     {{ end }}
     {{ if gt (len $pairs) 0 }}
       <div class="wrap section-more">
