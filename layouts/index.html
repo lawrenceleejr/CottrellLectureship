@@ -8,11 +8,6 @@
           <h1 class="hero-title">{{ .Params.headline | default site.Title }}</h1>
           {{ with .Params.deck }}<p class="hero-deck">{{ . | markdownify }}</p>{{ end }}
           {{ with .Content }}<div class="hero-lead dropcap">{{ . }}</div>{{ end }}
-          <dl class="hero-band">
-            <div><dt>Format</dt><dd>Two talks, one trip</dd></div>
-            <div><dt>Reach</dt><dd>U.S. &amp; Canada</dd></div>
-            <div><dt>Purpose</dt><dd>Lasting ties</dd></div>
-          </dl>
           <p class="hero-actions">
             <a class="btn" href="#speakers">Recent visits</a>
             <a class="btn btn-ghost" href="{{ (site.GetPage "/about").RelPermalink }}">How a pairing works</a>
