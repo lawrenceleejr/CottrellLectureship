@@ -6,7 +6,7 @@
       <p class="hero-tagline">{{ site.Params.tagline }}</p>
       {{ with .Content }}<div class="hero-intro prose">{{ . }}</div>{{ end }}
       <p class="hero-actions">
-        <a class="btn" href="#speakers">See the colloquia</a>
+        <a class="btn" href="#speakers">See recent visits</a>
         <a class="btn btn-ghost" href="{{ (site.GetPage "/about").RelPermalink }}">How the series works</a>
       </p>
     </div>
@@ -14,15 +14,20 @@
 
   <section class="lectures" id="speakers">
     <div class="wrap section-head">
-      <h2 class="section-title">Speakers &amp; Colloquia</h2>
-      <p class="section-sub">Each Cottrell Scholar gives a pair of linked colloquia — one hosted by their paired
-      scholar, and an equal second talk at a neighboring institution.</p>
+      <h2 class="section-title">Recent visits</h2>
+      <p class="section-sub">Each teacher-scholar gives two talks in the same region — one hosted by a Cottrell
+      Scholar, the other by a regional partner at a nearby college or university.</p>
     </div>
-    {{ $pairs := where site.RegularPages "Section" "lectures" }}
-    {{ range $pairs.ByDate.Reverse }}
+    {{ $pairs := (where site.RegularPages "Section" "lectures").ByDate.Reverse }}
+    {{ range first 3 $pairs }}
       {{ partial "pairing-card.html" (dict "page" . "level" 2) }}
     {{ else }}
-      <p class="wrap empty">No colloquia announced yet — check back soon.</p>
+      <p class="wrap empty">No visits announced yet — check back soon.</p>
+    {{ end }}
+    {{ if gt (len $pairs) 0 }}
+      <div class="wrap section-more">
+        <a class="btn btn-ghost" href="{{ (site.GetPage "/lectures").RelPermalink }}">See all speakers <span aria-hidden="true">&rarr;</span></a>
+      </div>
     {{ end }}
   </section>
 {{ end }}

@@ -3,7 +3,7 @@
 # Change it if you use a custom domain.
 baseURL = "https://lawrenceleejr.github.io/CottrellLectureship/"
 languageCode = "en-us"
-title = "Cottrell Collaborative Lectureship Series"
+title = "Cottrell Lectureship Series"
 enableRobotsTXT = true
 
 # Not a blog — drop the default tag/category taxonomy pages.
@@ -12,10 +12,10 @@ disableKinds = ["taxonomy", "term"]
 # Order lecture pages newest-first by default (templates also sort explicitly).
 [params]
   # ---- Edit these for your series ----------------------------------------
-  tagline = "A reciprocal colloquium series pairing Cottrell Scholars across neighboring institutions."
+  tagline = "One teacher-scholar, two talks in the same region — hosted by a Cottrell Scholar and a regional partner."
   funder = "Research Corporation for Science Advancement (RCSA)"
   funderShort = "RCSA"
-  program = "Cottrell Scholar Collaborative"
+  program = "Cottrell Collaborative project"
   # Shown in the footer. Replace with a real address (or leave blank to hide).
   contactEmail = "cottrell-lectures@example.edu"
   # -----------------------------------------------------------------------
